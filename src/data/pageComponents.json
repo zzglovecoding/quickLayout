@@ -1,8 +1,10 @@
 [
     {
-        "type":"Table"
+        "type":"Table",
+        "isSingle":true
     },
     {
-        "type":""
+        "type":"div",
+        "isSingle":false
     }
 ]
