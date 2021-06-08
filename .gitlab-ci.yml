@@ -1,0 +1,145 @@
+# 配置包含3个阶段build, package, deploy
+stages:
+  - build
+  - package
+  - deploy
+variables:
+  # 需要修改: 项目打包的名称, 对应 package.json > name
+  PACKAGE_NAME: package-name
+  # 需要修改: 访问项目的根路径, 对应 package.json > parcel > publicPath
+  PUBLIC_PATH: /
+  # 需要修改: 项目生成的 docker 镜像名称(默认与打包名称一致)
+  DOCKER_IMAGE: image-name
+  # 需要修改: 命名空间名称, 对应 Rancher 上的命名空间
+  NAMESPACE: namespace
+  # 需要修改: 服务/工作负载名称, 对应 Rancher 上的服务/工作负载(默认与打包名称一致, 该处不支持 xxx.xxx.xxx 命名格式)
+  APP_NAME: app-name
+  # 服务端口
+  PORT: 80
+  # 占用内存
+  MEMORY: 100Mi
+  # 占用CPU
+  CPU: 100m
+  # submodule 策略, 针对项目中用到 submodule 的情况
+  GIT_SUBMODULE_STRATEGY: recursive
+
+# build阶段前端项目构建任务
+node-build:
+   # 在build阶段执行    
+  stage: build
+  # 根据 tag 匹配对应的 Group Runner
+  tags:
+    - nodejs
+  
+  # 只在指定的分支执行该job
+  only:
+    refs:
+      - tags
+      - dev
+      - test
+      - master
+  
+  # 执行脚本  
+  script:
+    # 设置仓库地址
+    - yarn config set registry http://verdaccio.bbdops.com/
+    # 安装依赖
+    - yarn install
+    # 根据分支修改环境配置
+    #- yarn run env --branch=$CI_COMMIT_REF_NAME
+    # 执行构建程序
+    - yarn run package
+
+  # 将路径下的文件传递给下一个job  
+  artifacts:
+    paths:
+      - dist/
+
+# package阶段构建 docker 镜像任务
+docker-build:
+  # 在package阶段执行  
+  stage: package
+  tags:
+    - nodejs
+  # 只在指定的分支执行该job
+  only:
+    refs:
+      - tags
+      - dev
+      - test
+      - master
+  # 变量声明
+  variables:
+    # 当前项目生成的镜像名称, 前端部门提交的镜像统一使用 /front 前缀
+    DOCKER_IMAGE_NAME: registry.prod.bbdops.com/front/$DOCKER_IMAGE
+  # 预执行脚本
+  before_script:
+    # 用变量值替换 nginx.conf 中的占位符
+    - sed -i 's/$PACKAGE_NAME/'"$PACKAGE_NAME"'/' nginx.conf
+    - sed -i 's/$PUBLIC_PATH/'"$PUBLIC_PATH"'/' nginx.conf
+  # 执行脚本
+  script:
+    # 使用当前路径 Dockerfile 创建3个镜像
+    - docker build -t $DOCKER_IMAGE_NAME:$CI_COMMIT_SHORT_SHA -t $DOCKER_IMAGE_NAME:$CI_COMMIT_REF_NAME -t $DOCKER_IMAGE_NAME:latest .
+    # 发布 $CI_COMMIT_SHORT_SHA 镜像到仓库
+    - docker push $DOCKER_IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+    # 发布 $CI_COMMIT_REF_NAME 镜像到仓库
+    - docker push $DOCKER_IMAGE_NAME:$CI_COMMIT_REF_NAME
+    # 发布 latest 镜像到仓库
+    - docker push $DOCKER_IMAGE_NAME:latest
+
+# 以"."开头的为 hidden job, 不会被GitLab CI/CD 执行, 但可以被继承.
+.kubernetes-deploy:
+  # 在deploy阶段执行    
+  stage: deploy
+  tags:
+    - nodejs
+  # 执行脚本
+  before_script:
+    # 用变量值替换文件中的占位符.
+    # deployment.yml 是 kubernetes 使用的配置文件.
+    - sed -i 's/$CI_COMMIT_SHORT_SHA/'"$CI_COMMIT_SHORT_SHA"'/' deployment.yml
+    - sed -i 's/$DOCKER_IMAGE/'"$DOCKER_IMAGE"'/' deployment.yml
+    - sed -i 's/$APP_NAME/'"$APP_NAME"'/' deployment.yml
+    - sed -i 's/$PORT/'"$PORT"'/' deployment.yml
+    - sed -i 's/$MEMORY/'"$MEMORY"'/' deployment.yml
+    - sed -i 's/$CPU/'"$CPU"'/' deployment.yml
+
+# deploy阶段开发环境任务
+kubernetes-deploy-development:
+  # 继承自 .kubernetes-deploy 任务配置
+  extends: .kubernetes-deploy
+  # 只在dev分支执行
+  only:
+    refs:
+      - tags
+      - dev
+  # 在script脚本之前执行
+  script:
+    # namespace 为集群下对应命名空间的项目镜像进行容器启动的资源分配
+    - kubectl apply -f deployment.yml -n $NAMESPACE --kubeconfig=$HOME/.kube/development-config.yml
+
+# deploy阶段测试环境任务
+kubernetes-deploy-testing:
+  extends: .kubernetes-deploy
+  # 只在test分支执行
+  only:
+    refs:
+      - tags
+      - test
+  script:
+    # namespace 为集群下对应命名空间的项目镜像进行容器启动的资源分配
+    - kubectl apply -f deployment.yml -n $NAMESPACE --kubeconfig=$HOME/.kube/testing-config.yml
+
+# deploy阶段生产环境任务
+kubernetes-deploy-production:
+  extends: .kubernetes-deploy
+  # 只在master分支执行
+  only:
+    refs:
+      - tags
+      - master
+  when: manual
+  script:
+    # namespace 为集群下对应命名空间的项目镜像进行容器启动的资源分配
+    - kubectl apply -f deployment.yml -n $NAMESPACE --kubeconfig=$HOME/.kube/production-config.yml

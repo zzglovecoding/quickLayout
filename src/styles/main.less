@@ -1,0 +1,44 @@
+@import url('./fonts.less');
+
+:global {
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    *,
+    :after,
+    :before {
+        box-sizing: border-box;
+    }
+
+    body,
+    button,
+    input,
+    select,
+    textarea {
+        font: 14px 'Microsoft Yahei','PingFang SC',Helvetica,Arial,Simsun,sans-serif;
+    }
+
+    ul {
+        list-style-type: none;
+    }
+
+    img {
+        border-style: none;
+        box-sizing: border-box;
+        vertical-align: middle;
+    }
+
+    .clearfix:after {
+        content: '.';
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+    }
+
+    .hide {
+        display: none !important;
+    }
+}
