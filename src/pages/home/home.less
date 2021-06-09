@@ -6,35 +6,51 @@
         width: 100%;
         .componentsPickingPanel {
             height: 800px;
-            width:300px;
+            width:320px;
             float:left;
             border-bottom: 1px solid #e1e4e8;
             border-top: 1px solid #e1e4e8;
         }
         .displayLayoutPanel {
-            width:1262px;
+            width:1200px;
             height: 800px;
             border: 1px solid #e1e4e8;
             border-left: none;
             float:left;
         }
         .editingPanel {
-            width:320px;
+            width:380px;
             height:800px;
             float:left;
             border: 1px solid #e1e4e8;
             border-left: none;
+            border-right: none;
         }
     }
     .footer,.header {
-        height:50px;
+        height:70px;
         width: 100%;
-        padding-top: 20px;
+        padding-top: 15px;
         text-align: center;
-        font-size: 16px;
+        font-size: 12px;
         font-weight:700;
-        color: #3C8DBC;
+        color: rgba(0,64,128,0.7);
         letter-spacing: 5px;
+        .toolItem {
+            float:left;
+        }
+        .toolItem:nth-child(1) {
+            width:100px;
+            height: 30px;
+            &::after{
+                content: '是否显示网格线';
+                display: inline-block;
+                vertical-align: middle;
+                font-size:10px;
+                margin-top: 6px;
+                letter-spacing: 1px;
+            }
+        }
     }
     
 }
