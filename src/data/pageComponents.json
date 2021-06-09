@@ -1,10 +1,42 @@
 [
     {
-        "type":"Table",
-        "isSingle":true
+        "type":"span",
+        "isSingle":false,
+        "id":1
     },
     {
         "type":"div",
-        "isSingle":false
+        "isSingle":false,
+        "id":2
+    },
+    {
+        "type":"img",
+        "isSingle":true,
+        "id":3
+    },
+    {
+        "type":"antd-Table",
+        "isSingle":true,
+        "id":4
+    },
+    {
+        "type":"antd-Input",
+        "isSingle":true,
+        "id":5
+    },
+    {
+        "type":"antd-Button",
+        "isSingle":false,
+        "id":6
+    },
+    {
+        "type":"antd-Form",
+        "isSingle":false,
+        "id":7
+    },
+    {
+        "type":"antd-Modal",
+        "isSingle":false,
+        "id":8
     }
 ]

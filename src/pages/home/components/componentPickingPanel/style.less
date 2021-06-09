@@ -1,0 +1,32 @@
+.itemsContainer {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+        width:4px;
+    }
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        background: rgba(0,0,0,0.2);
+    }
+    &::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        border-radius: 0;
+        background: rgba(0,0,0,0.1)   
+    }
+    .componentItem {
+        width: 45%;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        font-size: 16px;
+        font-weight:bold;
+        border-radius:10px;
+        background: rgba(1,1,0.3,0.2);
+        margin-top: 10px;
+        float: left;
+        margin-left: 10px;
+        cursor: pointer;
+    }
+}
