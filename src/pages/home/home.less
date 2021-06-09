@@ -1,18 +1,40 @@
 .home{
-    .componentsPickingPanel {
-        height: 800px;
-        width:300px;
-        float:left;
-    }
-    .displayLayoutPanel {
-        width:1262px;
-        height: 800px;
-        border-right: 1px solid #e1e4e8;
-        float:left;
-    }
-    .editingPanel {
-        width:320px;
+    width: 1920px;
+    height: 900px;
+    .workBench {
         height:800px;
-        float:left;
+        width: 100%;
+        .componentsPickingPanel {
+            height: 800px;
+            width:300px;
+            float:left;
+            border-bottom: 1px solid #e1e4e8;
+            border-top: 1px solid #e1e4e8;
+        }
+        .displayLayoutPanel {
+            width:1262px;
+            height: 800px;
+            border: 1px solid #e1e4e8;
+            border-left: none;
+            float:left;
+        }
+        .editingPanel {
+            width:320px;
+            height:800px;
+            float:left;
+            border: 1px solid #e1e4e8;
+            border-left: none;
+        }
     }
+    .footer,.header {
+        height:50px;
+        width: 100%;
+        padding-top: 20px;
+        text-align: center;
+        font-size: 16px;
+        font-weight:700;
+        color: #3C8DBC;
+        letter-spacing: 5px;
+    }
+    
 }
