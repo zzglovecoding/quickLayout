@@ -5,10 +5,11 @@ const pageSizeContext = React.createContext({
 });
 
 function pageHook() {
+    // 中间的展示区域的宽高和距离等等
     const [sizeData, setSizeData] = useState({
-        left: 300,
-        top: 50,
-        width: 1261,
+        left: 320,
+        top: 70,
+        width: 1199,
         height: 798
     });
 

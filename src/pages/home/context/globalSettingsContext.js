@@ -6,6 +6,7 @@ const globalSettingsContext = React.createContext({
 
 function settingsHook() {
     const [isShowGrid, setIsShowGrid] = useState(false);
+    const [componentTree, setComponentTree] = useState({ root: 'root', children: [] });
 
     const handleGridChange = () => {
         setIsShowGrid(!isShowGrid);
@@ -13,7 +14,9 @@ function settingsHook() {
 
     return {
         isShowGrid,
-        handleGridChange
+        handleGridChange,
+        componentTree,
+        setComponentTree
     };
 }
 

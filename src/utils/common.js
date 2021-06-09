@@ -238,3 +238,24 @@ export function spliteStr(str, separator = ',') {
     });
     return array;
 }
+
+// 根据componentTree，在layoutContainer中把效果图画出来
+export function paintDisplayLayout(componentTree) {
+    
+}
+
+// 从全局数据当中，根据UUID找到某个元素，用于修改其参数
+export function getElementFromTreeBasedonUUID() {
+
+}
+
+// TODO: 检测是否产生了元素之间的碰撞，如果有，就可以结束了
+// 会在调整大小以及drop的时候调用这个函数，修改componentTree的结构
+export function checkIsConflictAddToTree() {
+
+}
+
+// TODO: 吸附于辅助线的函数
+export function fixToSupLine() {
+
+}
