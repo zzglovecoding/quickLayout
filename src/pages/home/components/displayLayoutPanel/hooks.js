@@ -31,8 +31,9 @@ export default function(sizeData, settings) {
         // 检查是否有冲突，有的话就提示有问题
         let noConflict = checkisConflict(treeNode, componentTree);
         if (noConflict) {
+            let targetUUID = noConflict.directParent;
             // 摆放位置没有冲突，可以找到父级然后添加到树当中
-            addNodeToProperSite(treeNode, componentTree);
+            addNodeToProperSite(treeNode, componentTree, targetUUID);
             setComponentTree({ ...componentTree });
         } else {
             message.error('不规范的摆放，请重新摆放');
