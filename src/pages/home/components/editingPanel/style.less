@@ -1,0 +1,54 @@
+@wordColor:rgba(0,106,180,.8);
+.container {
+    h1{
+        color:@wordColor;
+        font-weight: 700;
+        margin-left: 30px;
+        font-size: 18px;
+        text-align: center;
+        padding-top: 20px;
+    }
+    .inputRow {
+        width:80%;
+        margin-left: 50px;
+        position: relative;
+        margin-top: 30px;
+        text-align: center;
+        &::before {
+            content:' ';
+            display:block;
+            position: absolute;
+            width:40px;
+            left: -44px;
+            top: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color:@wordColor;
+        }
+        &:nth-child(2) {
+            &::before {
+                content:'width';
+            }
+        }
+        &:nth-child(3) {
+            &::before {
+                content:'height';
+            }
+        }
+        &:nth-child(4) {
+            &::before {
+                content:'cName';
+            }
+        }
+        &:nth-child(5) {
+            &::before {
+                content:'left';
+            }
+        }
+        &:nth-child(6) {
+            &::before {
+                content:'top';
+            }
+        }
+    }
+}

@@ -1,3 +1,4 @@
+@wordColor:rgba(0,106,180,.8);
 .home{
     width: 1920px;
     height: 900px;
@@ -34,7 +35,7 @@
         text-align: center;
         font-size: 12px;
         font-weight:700;
-        color: rgba(0,64,128,0.7);
+        color: @wordColor;
         letter-spacing: 5px;
         .toolItem {
             float:left;
@@ -44,11 +45,12 @@
             height: 30px;
             margin-left: 15px;
             &::after{
-                content: '是否显示网格线';
+                content: 'grid line';
                 display: inline-block;
+                width:100px;
                 vertical-align: middle;
                 font-size:10px;
-                margin-top: 6px;
+                margin-top: 10px;
                 letter-spacing: 1px;
             }
         }

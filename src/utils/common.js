@@ -10,23 +10,29 @@ const handleDragStart = (e, currentNode) => {
     e.dataTransfer.setData('uuid', currentNode.uuid);
 };
 
-const handleDragEnd = (e) => {
+const handleDragEnd = e => {
     e.target.style.opacity = '1';
     e.dataTransfer.clearData();
 };
 
 // 根据对象生成DOM
-function generateElement(item) {
+function generateElement(item, setEditingComponent) {
     let element = document.createElement(item.current.componentName);
     element.style.position = 'absolute';
     element.style.left = item.current.left + 'px';
     element.style.top = item.current.top + 'px';
     element.style.width = item.current.width + 'px';
     element.style.height = item.current.height + 'px';
+    element.style.cursor = 'pointer';
     element.style.border = '1px solid rgba(128,128,128,.3)';
+    // 下面是拖动部分的逻辑
     element.draggable = true;
     element.ondragstart = e => handleDragStart(e, item.current);
     element.ondragend = e => handleDragEnd(e);
+    // 下面是点击事件
+    element.onclick = () => {
+        setEditingComponent(item.current);
+    };
     return element;
 }
 
@@ -34,7 +40,7 @@ function generateElement(item) {
 function Ite(node, current) {
     if (node.children.length > 0) {
         node.children.map(item => {
-            let element = generateElement(item);
+            let element = generateElement(item, setEditingComponent);
             Ite(item, element);
             return element;
         }).forEach(one => {
@@ -44,10 +50,10 @@ function Ite(node, current) {
 }
 
 // 根据componentTree，在layoutContainer中把效果图画出来
-export function paintDisplayLayout(componentTree, canvas) {
+export function paintDisplayLayout(componentTree, canvas, setEditingComponent) {
     let frag = new DocumentFragment();
     componentTree.children.map(item => {
-        let element = generateElement(item);
+        let element = generateElement(item, setEditingComponent);
         Ite(item, element);
         return element;
     }).forEach(one => {

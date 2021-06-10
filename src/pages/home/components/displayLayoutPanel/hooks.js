@@ -4,11 +4,15 @@ import { paintDisplayLayout, checkisConflict, addNodeToProperSite, deleteANodeOn
 import { uuid } from '@/utils/common.js';
 import { ITEM_DEFAULT_WIDTH, ITEM_DEFAULT_HEIGHT } from '@/constants/common.js';
 
-export default function(sizeData, settings) {
+export default function(sizeData, settings, editing ) {
     const {
         componentTree,
         setComponentTree
     } = settings;
+
+    const {
+        setEditingComponent
+    } = editing;
 
     const handleDropInDisplayArea = e => {
         e.stopPropagation();
@@ -50,6 +54,7 @@ export default function(sizeData, settings) {
             // 摆放位置没有冲突，可以找到父级然后添加到树当中
             addNodeToProperSite(treeNode, componentTree, targetUUID);
             setComponentTree({ ...componentTree });
+            setEditingComponent(treeNode.current);
         } else {
             message.error('不规范的摆放，请重新摆放');
             setComponentTree({ ...componentCopy });
@@ -74,7 +79,7 @@ export default function(sizeData, settings) {
         // 先清空画布
         canvas.innerHTML = '';
         // 然后根据树画出来
-        paintDisplayLayout(componentTree, canvas);
+        paintDisplayLayout(componentTree, canvas, setEditingComponent);
     }, [componentTree]);
 
     return {
