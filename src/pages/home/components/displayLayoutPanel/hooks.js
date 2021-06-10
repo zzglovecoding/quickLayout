@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { message } from 'antd';
-import { paintDisplayLayout, checkisConflict, addNodeToProperSite } from '@/utils/common.js';
+import { paintDisplayLayout, checkisConflict, addNodeToProperSite, deleteANodeOnTree } from '@/utils/common.js';
 import { uuid } from '@/utils/common.js';
 import { ITEM_DEFAULT_WIDTH, ITEM_DEFAULT_HEIGHT } from '@/constants/common.js';
 
@@ -15,8 +15,23 @@ export default function(sizeData, settings) {
         let componentName = e.dataTransfer.getData('componentName');
         let yOffset = e.dataTransfer.getData('yOffset');
         let xOffset = e.dataTransfer.getData('xOffset');
-        let left = e.clientX - 320 - xOffset;
-        let top = e.clientY - 70 - yOffset;
+        let isAgain = e.dataTransfer.getData('again');
+        let componentCopy = JSON.parse(JSON.stringify(componentTree));
+        let left;
+        let top;
+        // 第二次拖动，就需要判断一下
+        if (isAgain) {
+            left = e.clientX - xOffset;
+            top = e.clientY - yOffset;
+            let uuid = e.dataTransfer.getData('uuid');
+            deleteANodeOnTree(componentTree, uuid);
+            setComponentTree({ ...componentTree });
+        } else {
+            left = e.clientX - 320 - xOffset;
+            top = e.clientY - 70 - yOffset;
+        }
+
+        // 下面就是插入到页面当中的逻辑，先生成treeNode，再插入进去
         let current = {
             uuid: uuid(),
             componentName,
@@ -37,7 +52,7 @@ export default function(sizeData, settings) {
             setComponentTree({ ...componentTree });
         } else {
             message.error('不规范的摆放，请重新摆放');
-            return;
+            setComponentTree({ ...componentCopy });
         }
         
     };

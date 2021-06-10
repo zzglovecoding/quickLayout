@@ -1,3 +1,20 @@
+const handleDragStart = (e, currentNode) => {
+    // 这两个偏移值，是鼠标和元素左上角的x和y的距离
+    let xOffset = e.clientX - e.target.offsetLeft;
+    let yOffset = e.clientY - e.target.offsetTop;
+    e.target.style.opacity = '0.4';
+    e.dataTransfer.setData('componentName', currentNode.componentName);
+    e.dataTransfer.setData('xOffset', xOffset);
+    e.dataTransfer.setData('yOffset', yOffset);
+    e.dataTransfer.setData('again', true);
+    e.dataTransfer.setData('uuid', currentNode.uuid);
+};
+
+const handleDragEnd = (e) => {
+    e.target.style.opacity = '1';
+    e.dataTransfer.clearData();
+};
+
 // 根据对象生成DOM
 function generateElement(item) {
     let element = document.createElement(item.current.componentName);
@@ -7,6 +24,9 @@ function generateElement(item) {
     element.style.width = item.current.width + 'px';
     element.style.height = item.current.height + 'px';
     element.style.border = '1px solid rgba(128,128,128,.3)';
+    element.draggable = true;
+    element.ondragstart = e => handleDragStart(e, item.current);
+    element.ondragend = e => handleDragEnd(e);
     return element;
 }
 
@@ -177,4 +197,23 @@ export function addNodeToProperSite(insertNode, componentTree, targetUUID) {
         }
     }
     Ite(componentTree);
+}
+
+export function deleteANodeOnTree(node, uuid) {
+    function Ite(node, uuid) {
+        let arr = node.children.map(item => {
+            return item.current.uuid;
+        });
+        if (arr.includes(uuid)) {
+            let index = arr.indexOf(uuid);
+            node.children.splice(index, 1);
+            return;
+        }
+        if (node.children.length > 0) {
+            node.children.forEach(item => {
+                Ite(item);
+            });
+        }
+    }
+    Ite(node, parseInt(uuid, 10));
 }
