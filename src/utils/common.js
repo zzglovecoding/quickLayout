@@ -1,261 +1,122 @@
-/**
- * @desc 封装了一些项目常用方法.
- */
-
-// 内部函数, 用于判断对象类型
-function _getClass(object) {
-    return Object.prototype.toString.call(object).match(/^\[object\s(.*)\]$/)[1];
+// 根据对象生成DOM
+function generateElement(item) {
+    let element = document.createElement(item.current.componentName);
+    element.style.position = 'absolute';
+    element.style.left = item.current.left + 'px';
+    element.style.top = item.current.top + 'px';
+    element.style.width = item.current.width + 'px';
+    element.style.height = item.current.height + 'px';
+    element.style.border = '1px solid rgba(128,128,128,.3)';
+    return element;
 }
 
-export function trim(str) {
-    return str.replace(/^\s*/, '').replace(/\s*$/, '');
-}
-
-export function isArray(obj) {
-    return _getClass(obj).toLowerCase() === 'array';
-}
-
-export function isString(obj) {
-    return _getClass(obj).toLowerCase() === 'string';
-}
-
-export function isDate(obj) {
-    return _getClass(obj).toLowerCase() === 'date';
-}
-
-export function isObject(obj) {
-    return _getClass(obj).toLowerCase() === 'object';
-}
-
-export function isNumber(obj) {
-    return _getClass(obj).toLowerCase() === 'number';
-}
-
-export function isFormData(obj) {
-    return (typeof FormData !== 'undefined') && (obj instanceof FormData);
-}
-
-export function isFile(obj) {
-    return _getClass(obj).toLowerCase() === 'file';
-}
-
-export function isBlob(obj) {
-    return _getClass(obj).toLowerCase() === 'blob';
-}
-
-export function isFunction(obj) {
-    return _getClass(obj).toLowerCase() === 'function';
-}
-
-export function isStream(obj) {
-    return isObject(obj) && isFunction(obj.pipe);
-}
-
-export function isURLSearchParams(obj) {
-    return typeof URLSearchParams !== 'undefined' && obj instanceof URLSearchParams;
-}
-
-export function isIE() {
-    var userAgent = navigator.userAgent;
-    if (userAgent.indexOf('compatible') > -1 &&
-        userAgent.indexOf('MSIE') > -1) {
-        return true;
+// 把这个节点下面的也都加上，采用递归
+function Ite(node, current) {
+    if (node.children.length > 0) {
+        node.children.map(item => {
+            let element = generateElement(item);
+            Ite(item, element);
+            return element;
+        }).forEach(one => {
+            current.appendChild(one);
+        });
     }
-    return false;
-}
-
-/**
- * @desc 判断参数是否为空, 包括null, undefined, [], '', {}
- * @param {object} obj 需判断的对象
- */
-export function isEmpty(obj) {
-    var empty = false;
-
-    if (obj === null || obj === undefined) { // null and undefined
-        empty = true;
-    } else if ((isArray(obj) || isString(obj)) && obj.length === 0) {
-        empty = true;
-    } else if (isObject(obj)) {
-        var hasProp = false;
-        for (let prop in obj) {
-            if (obj.hasOwnProperty(prop)) {
-                hasProp = true;
-                break;
-            }
-        }
-        if (!hasProp) {
-            empty = true;
-        }
-    } else if (isNumber(obj) && isNaN(obj)) {
-        empty = true;
-    }
-    return empty;
-}
-
-/**
- * @desc 判断参数是否不为空
- */
-export function isNotEmpty(obj) {
-    return !isEmpty(obj);
-}
-
-/**
- * @desc 判断参数是否为空字符串, 比isEmpty()多判断字符串中全是空格的情况, 如: '   '.
- * @param {string} str 需判断的字符串
- */
-export function isBlank(str) {
-    if (isEmpty(str)) {
-        return true;
-    } else if (isString(str) && str.trim().length === 0) {
-        return true;
-    }
-    return false;
-}
-
-/**
- * @desc 判断参数是否不为空字符串
- */
-export function isNotBlank(obj) {
-    return !isBlank(obj);
-}
-
-/**
- * @desc 函数节流
- * @url http://underscorejs.org/#throttle
- * @param {string} func 防抖函数
- * @param {string} wait 间隔时间
- * @param {string} options 可选项
- */
-export function throttle(func, wait, options) {
-    var context, args, result;
-    var timeout = null;
-    var previous = 0;
-    if (!options) {
-        options = {};
-    }
-
-    var later = function() {
-        previous = options.leading === false ? 0 : +new Date();
-        timeout = null;
-        result = func.apply(context, args);
-        if (!timeout) {
-            context = args = null;
-        }
-    };
-
-    return function() {
-        var now = +new Date();
-        if (!previous && options.leading === false) {
-            previous = now;
-        } 
-        var remaining = wait - (now - previous);
-        context = this;
-        args = arguments;
-        if (remaining <= 0 || remaining > wait) {
-            if (timeout) {
-                clearTimeout(timeout);
-                timeout = null;
-            }
-            previous = now;
-            result = func.apply(context, args);
-            if (!timeout) {
-                context = args = null;
-            }
-        } else if (!timeout && options.trailing !== false) {
-            timeout = setTimeout(later, remaining);
-        }
-        return result;
-    };
-}
-
-/**
- * @desc 函数防抖，让某个函数在上一次执行后，满足等待某个时间内不再触发此函数后再执行，而在这个等待时间内再次触发此函数，等待时间会重新计算。
- * 解决频繁发生的事件，比如
- * 1.window 的 resize、scroll
- * 2.mousedown、mousemove
- * 3.keyup、keydown
- * 试用场景：输入框搜索，滚动懒加载图片
- * @param {fun} 需要进行函数防抖的函数
- * @param {wait} 参数wait则是需要等待的时间，单位为毫秒
- * @param {immediate} immediate参数如果为true，则debounce函数会在调用时立刻执行一次function，而不需要等到wait这个时间后，
- */
-export function debounce(func, wait, immediate) {
-    var timeout, result;
-    var debounced = function() {
-        var context = this;
-        var args = arguments;
-        
-        if (timeout) {
-            clearTimeout(timeout);
-        }
-
-        if (immediate) {
-            // 如果已经执行过，不再执行
-            var callNow = !timeout;
-
-            if (callNow) {
-                result = func.apply(context, args);
-            }
-
-            timeout = setTimeout(function() {
-                // timeout 为 null 的时候 callNow 才为 true.
-                timeout = null;
-            }, wait);
-        } else {
-            timeout = setTimeout(function() {
-                func.apply(context, args);
-            }, wait);
-        }
-        return result;
-    };
-
-    debounced.cancel = function() {
-        clearTimeout(timeout);
-        timeout = null;
-    };
-
-    return debounced;
-}
-
-/**
- * @desc 字符串切分为数组
- * @param {String} str 将要切分的字符串
- * @param {String} separator 分隔符
- * @return {Array} 切分的数组.
- */
-export function spliteStr(str, separator = ',') {
-    if (isBlank(str)) {
-        return [];
-    }
-
-    var array = [];
-
-    str.split(separator).forEach(substring => {
-        var substr = substring.trim();
-        if (substr.length > 0) {
-            array.push(substr);
-        }
-    });
-    return array;
 }
 
 // 根据componentTree，在layoutContainer中把效果图画出来
-export function paintDisplayLayout(componentTree) {
-    
-}
+export function paintDisplayLayout(componentTree, canvas) {
+    let frag = new DocumentFragment();
+    componentTree.children.map(item => {
+        let element = generateElement(item);
+        Ite(item, element);
+        return element;
+    }).forEach(one => {
+        frag.appendChild(one);
+    });
 
-// 从全局数据当中，根据UUID找到某个元素，用于修改其参数
-export function getElementFromTreeBasedonUUID() {
-
-}
-
-// TODO: 检测是否产生了元素之间的碰撞，如果有，就可以结束了
-// 会在调整大小以及drop的时候调用这个函数，修改componentTree的结构
-export function checkIsConflictAddToTree() {
-
+    canvas.appendChild(frag);
 }
 
 // TODO: 吸附于辅助线的函数
 export function fixToSupLine() {
 
+}
+
+export function uuid() {
+    return Math.floor(Math.random() * +new Date());
+}
+
+// 获取盒子在x轴的坐标范围和y轴的坐标范围，用数组描述
+export function getDistance(box) {
+    let horizon_span = [];
+    let vertical_span = [];
+    let hstart = box.left;
+    let hend = box.left + box.width;
+    let vstart = box.top;
+    let vend = box.top + box.height;
+    horizon_span.push(hstart, hend);
+    vertical_span.push(vstart, vend);
+    return [horizon_span, vertical_span];
+}
+
+// 判断两个box有没有交叉
+export function judgeTwoBox(box1, box2) {
+    // 在下面的情况当中是没有交叉的，其他的都有交叉
+    let firstxSpan = box1[0];
+    let firstySpan = box1[1];
+    let secondxSpan = box2[0];
+    let secondySpan = box2[1];
+    // 如果是并列的情况，就是下面四种中的一种
+    if (secondySpan[0] >= firstySpan[1]) {
+        return true;
+    } else if (secondxSpan[0] >= firstxSpan[1]) {
+        return true;
+    } else if (secondySpan[1] <= firstySpan[0]) {
+        return true;
+    } else if (secondxSpan[1] <= firstxSpan[0]) {
+        return true;
+    }
+    // 如果是包含关系,有可能是第一个包含第二个，也可能是第二个包含第一个
+    if (firstxSpan[0] >= secondxSpan[0] && firstxSpan[1] <= secondxSpan[1] && firstySpan[0] >= secondySpan[0] && firstySpan[1] <= secondySpan[1]) {
+        // 这里就是second包含first的情况
+        return true;
+    }
+    if (secondxSpan[0] >= firstxSpan[0] && secondxSpan[1] <= firstxSpan[1] && secondySpan[0] >= firstySpan[0] && secondySpan[1] <= firstySpan[1]) {
+        return true;
+    }
+    return false;
+}
+
+// 递归树，看有没有冲突，有冲突就需要重新摆放
+export function checkisConflict(currentBox, componentTree) {
+    let flag = true;
+    let currentBoxArr = getDistance(currentBox.current);
+    // 遍历每一个节点，如果有交叉，说明存在
+    function Ite(node) {
+        if (node.children.length > 0) {
+            node.children.forEach(item => {
+                Ite(item);
+            });
+        }
+        let containerBoxArr = getDistance(node.current);
+        flag = judgeTwoBox(currentBoxArr, containerBoxArr);
+        if (!flag) {
+            return;
+        }
+    }
+    Ite(componentTree);
+    return flag;
+}
+
+// 根据框的包含关系，找出他的直接父级
+function findParent(currentBox, componentTree) {
+
+}
+
+// 把它添加到树当中
+export function addNodeToProperSite(currentBox, componentTree) {
+
+    // 说明parent就是body,直接push进去即可
+    componentTree.children.push(currentBox);
+    
 }
