@@ -27,7 +27,7 @@ export default function() {
             <div className={styles.inputRow}>
                 <Input disabled={disabled}
                     value={editingComponent.width} onChange={e => {
-                        getTargetBaseOnuuid(componentTree, editingComponent.uuid).current.width = e.target.value;
+                        getTargetBaseOnuuid(componentTree, editingComponent.uuid).current.width = parseFloat(e.target.value);
                         setComponentTree({ ...componentTree });
                     }}
                     onKeyDown={e => {
@@ -45,7 +45,7 @@ export default function() {
             <div className={styles.inputRow}>
                 <Input  disabled={disabled}
                     value={editingComponent.height} onChange={e => {
-                        getTargetBaseOnuuid(componentTree, editingComponent.uuid).current.height = e.target.value;
+                        getTargetBaseOnuuid(componentTree, editingComponent.uuid).current.height = parseFloat(e.target.value);
                         setComponentTree({ ...componentTree });
                     }
                     }
@@ -73,7 +73,7 @@ export default function() {
             <div className={styles.inputRow}>
                 <Input  disabled={disabled}
                     value={editingComponent.left} onChange={e => {
-                        getTargetBaseOnuuid(componentTree, editingComponent.uuid).current.left = e.target.value;
+                        getTargetBaseOnuuid(componentTree, editingComponent.uuid).current.left = parseFloat(e.target.value);
                         setComponentTree({ ...componentTree });
                     }
                     }
@@ -92,7 +92,7 @@ export default function() {
             <div className={styles.inputRow}>
                 <Input  disabled={disabled}
                     value={editingComponent.top} onChange={e => {
-                        getTargetBaseOnuuid(componentTree, editingComponent.uuid).current.top = e.target.value;
+                        getTargetBaseOnuuid(componentTree, editingComponent.uuid).current.top = parseFloat(e.target.value);
                         setComponentTree({ ...componentTree });
                     }
                     }

@@ -28,16 +28,18 @@ export default function(sizeData, settings, editing ) {
         let height;
         // 第二次拖动，就需要判断一下
         if (isAgain) {
-            left = e.clientX - xOffset;
-            top = e.clientY - yOffset;
+            left = e.clientX - parseFloat(xOffset);
+            top = e.clientY - parseFloat(yOffset);
             width = parseFloat(e.dataTransfer.getData('width'));
             height = parseFloat(e.dataTransfer.getData('height'));
             let uuid = e.dataTransfer.getData('uuid');
             deleteANodeOnTree(componentTree, uuid);
             setComponentTree({ ...componentTree });
         } else {
-            left = e.clientX - 320 - xOffset;
-            top = e.clientY - 70 - yOffset;
+            left = e.clientX - 320 - parseFloat(xOffset);
+            top = e.clientY - 70 - parseFloat(yOffset);
+            width = ITEM_DEFAULT_WIDTH;
+            height = ITEM_DEFAULT_HEIGHT;
         }
 
         // 下面就是插入到页面当中的逻辑，先生成treeNode，再插入进去
@@ -47,8 +49,8 @@ export default function(sizeData, settings, editing ) {
                 componentName,
                 left,
                 top,
-                width: width ? width : ITEM_DEFAULT_WIDTH,
-                height: height ? height : ITEM_DEFAULT_HEIGHT,
+                width,
+                height,
                 isEditingNow
             },
             children: []
@@ -59,6 +61,7 @@ export default function(sizeData, settings, editing ) {
             eraseEditingNowBaseonUUID(componentTree, e.dataTransfer.getData('uuid'));
             let targetUUID = noConflict.directParent;
             // 摆放位置没有冲突，可以找到父级然后添加到树当中
+            treeNode.current.parent = targetUUID;
             addNodeToProperSite(treeNode, componentTree, targetUUID);
             setComponentTree({ ...componentTree });
             setEditingComponent(treeNode.current);

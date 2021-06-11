@@ -116,8 +116,9 @@ export function isNotBlank(obj) {
 
 const handleDragStart = (e, currentNode) => {
     // 这两个偏移值，是鼠标和元素左上角的x和y的距离
-    let xOffset = e.clientX - e.target.offsetLeft;
-    let yOffset = e.clientY - e.target.offsetTop;
+    e.stopPropagation();
+    let xOffset = e.clientX - currentNode.left;
+    let yOffset = e.clientY - currentNode.top;
     e.target.style.opacity = '0.4';
     e.dataTransfer.setData('componentName', currentNode.componentName);
     e.dataTransfer.setData('width', currentNode.width);
@@ -132,6 +133,7 @@ const handleDragStart = (e, currentNode) => {
 };
 
 const handleDragEnd = e => {
+    e.stopPropagation();
     e.target.style.opacity = '1';
     e.dataTransfer.clearData();
 };
@@ -139,9 +141,17 @@ const handleDragEnd = e => {
 // 根据对象生成DOM
 function generateElement(item, setEditingComponent, componentTree, setComponentTree) {
     let element = document.createElement(item.current.componentName);
+    if (item.current.parent === 1) {
+        element.style.left = item.current.left + 'px';
+        element.style.top = item.current.top + 'px';
+    } else {
+        let parent = getTargetBaseOnuuid(componentTree, item.current.parent).current;
+        let left = parent.left;
+        let top = parent.top;
+        element.style.left = item.current.left - left + 'px';
+        element.style.top = item.current.top - top + 'px';
+    }
     element.style.position = 'absolute';
-    element.style.left = item.current.left + 'px';
-    element.style.top = item.current.top + 'px';
     element.style.width = item.current.width + 'px';
     element.style.height = item.current.height + 'px';
     element.style.cursor = 'pointer';
@@ -165,11 +175,11 @@ function generateElement(item, setEditingComponent, componentTree, setComponentT
 }
 
 // 把这个节点下面的也都加上，采用递归
-function Ite(node, current, componentTree, setComponentTree) {
+function Ite(node, current, setEditingComponent, componentTree, setComponentTree) {
     if (node.children.length > 0) {
         node.children.map(item => {
             let element = generateElement(item, setEditingComponent, componentTree, setComponentTree);
-            Ite(item, element, componentTree, setComponentTree);
+            Ite(item, element, setEditingComponent, componentTree, setComponentTree);
             return element;
         }).forEach(one => {
             current.appendChild(one);
@@ -182,7 +192,7 @@ export function paintDisplayLayout(componentTree, canvas, setEditingComponent, s
     let frag = new DocumentFragment();
     componentTree.children.map(item => {
         let element = generateElement(item, setEditingComponent, componentTree, setComponentTree);
-        Ite(item, element, componentTree, setComponentTree);
+        Ite(item, element, setEditingComponent, componentTree, setComponentTree);
         return element;
     }).forEach(one => {
         frag.appendChild(one);
@@ -345,7 +355,7 @@ export function deleteANodeOnTree(node, uuid) {
         }
         if (node.children.length > 0) {
             node.children.forEach(item => {
-                Ite(item);
+                Ite(item, uuid);
             });
         }
     }
