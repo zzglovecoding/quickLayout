@@ -1,13 +1,134 @@
+function _getClass(object) {
+    return Object.prototype.toString.call(object).match(/^\[object\s(.*)\]$/)[1];
+}
+
+export function trim(str) {
+    return str.replace(/^\s*/, '').replace(/\s*$/, '');
+}
+
+export function isArray(obj) {
+    return _getClass(obj).toLowerCase() === 'array';
+}
+
+export function isString(obj) {
+    return _getClass(obj).toLowerCase() === 'string';
+}
+
+export function isDate(obj) {
+    return _getClass(obj).toLowerCase() === 'date';
+}
+
+export function isObject(obj) {
+    return _getClass(obj).toLowerCase() === 'object';
+}
+
+export function isNumber(obj) {
+    return _getClass(obj).toLowerCase() === 'number';
+}
+
+export function isFormData(obj) {
+    return (typeof FormData !== 'undefined') && (obj instanceof FormData);
+}
+
+export function isFile(obj) {
+    return _getClass(obj).toLowerCase() === 'file';
+}
+
+export function isBlob(obj) {
+    return _getClass(obj).toLowerCase() === 'blob';
+}
+
+export function isFunction(obj) {
+    return _getClass(obj).toLowerCase() === 'function';
+}
+
+export function isStream(obj) {
+    return isObject(obj) && isFunction(obj.pipe);
+}
+
+export function isURLSearchParams(obj) {
+    return typeof URLSearchParams !== 'undefined' && obj instanceof URLSearchParams;
+}
+
+export function isIE() {
+    var userAgent = navigator.userAgent;
+    if (userAgent.indexOf('compatible') > -1 &&
+        userAgent.indexOf('MSIE') > -1) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * @desc 判断参数是否为空, 包括null, undefined, [], '', {}
+ * @param {object} obj 需判断的对象
+ */
+export function isEmpty(obj) {
+    var empty = false;
+
+    if (obj === null || obj === undefined) { // null and undefined
+        empty = true;
+    } else if ((isArray(obj) || isString(obj)) && obj.length === 0) {
+        empty = true;
+    } else if (isObject(obj)) {
+        var hasProp = false;
+        for (let prop in obj) {
+            if (obj.hasOwnProperty(prop)) {
+                hasProp = true;
+                break;
+            }
+        }
+        if (!hasProp) {
+            empty = true;
+        }
+    } else if (isNumber(obj) && isNaN(obj)) {
+        empty = true;
+    }
+    return empty;
+}
+
+/**
+ * @desc 判断参数是否不为空
+ */
+export function isNotEmpty(obj) {
+    return !isEmpty(obj);
+}
+
+/**
+ * @desc 判断参数是否为空字符串, 比isEmpty()多判断字符串中全是空格的情况, 如: '   '.
+ * @param {string} str 需判断的字符串
+ */
+export function isBlank(str) {
+    if (isEmpty(str)) {
+        return true;
+    } else if (isString(str) && str.trim().length === 0) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * @desc 判断参数是否不为空字符串
+ */
+export function isNotBlank(obj) {
+    return !isBlank(obj);
+}
+
 const handleDragStart = (e, currentNode) => {
     // 这两个偏移值，是鼠标和元素左上角的x和y的距离
     let xOffset = e.clientX - e.target.offsetLeft;
     let yOffset = e.clientY - e.target.offsetTop;
     e.target.style.opacity = '0.4';
     e.dataTransfer.setData('componentName', currentNode.componentName);
+    e.dataTransfer.setData('width', currentNode.width);
+    e.dataTransfer.setData('height', currentNode.height);
+    e.dataTransfer.setData('left', currentNode.left);
+    e.dataTransfer.setData('top', currentNode.top);
     e.dataTransfer.setData('xOffset', xOffset);
     e.dataTransfer.setData('yOffset', yOffset);
     e.dataTransfer.setData('again', true);
     e.dataTransfer.setData('uuid', currentNode.uuid);
+    e.dataTransfer.setData('isEditingNow', currentNode.isEditingNow);
 };
 
 const handleDragEnd = e => {
@@ -16,7 +137,7 @@ const handleDragEnd = e => {
 };
 
 // 根据对象生成DOM
-function generateElement(item, setEditingComponent) {
+function generateElement(item, setEditingComponent, componentTree, setComponentTree) {
     let element = document.createElement(item.current.componentName);
     element.style.position = 'absolute';
     element.style.left = item.current.left + 'px';
@@ -24,24 +145,31 @@ function generateElement(item, setEditingComponent) {
     element.style.width = item.current.width + 'px';
     element.style.height = item.current.height + 'px';
     element.style.cursor = 'pointer';
-    element.style.border = '1px solid rgba(128,128,128,.3)';
+    element.style.border = item.current.isEditingNow ? '1px dashed red' : '1px solid rgba(128,128,128,.3)';
     // 下面是拖动部分的逻辑
     element.draggable = true;
-    element.ondragstart = e => handleDragStart(e, item.current);
+    element.ondragstart = e => {
+        item.current.isEditingNow = true;
+        handleDragStart(e, item.current);
+    };
     element.ondragend = e => handleDragEnd(e);
     // 下面是点击事件
     element.onclick = () => {
+        element.style.border = '1px dashed red';
+        eraseEditingNowBaseonUUID(componentTree, item.current.uuid);
+        item.current.isEditingNow = true;
+        setComponentTree({ ...componentTree });
         setEditingComponent(item.current);
     };
     return element;
 }
 
 // 把这个节点下面的也都加上，采用递归
-function Ite(node, current) {
+function Ite(node, current, componentTree, setComponentTree) {
     if (node.children.length > 0) {
         node.children.map(item => {
-            let element = generateElement(item, setEditingComponent);
-            Ite(item, element);
+            let element = generateElement(item, setEditingComponent, componentTree, setComponentTree);
+            Ite(item, element, componentTree, setComponentTree);
             return element;
         }).forEach(one => {
             current.appendChild(one);
@@ -50,11 +178,11 @@ function Ite(node, current) {
 }
 
 // 根据componentTree，在layoutContainer中把效果图画出来
-export function paintDisplayLayout(componentTree, canvas, setEditingComponent) {
+export function paintDisplayLayout(componentTree, canvas, setEditingComponent, setComponentTree) {
     let frag = new DocumentFragment();
     componentTree.children.map(item => {
-        let element = generateElement(item, setEditingComponent);
-        Ite(item, element);
+        let element = generateElement(item, setEditingComponent, componentTree, setComponentTree);
+        Ite(item, element, componentTree, setComponentTree);
         return element;
     }).forEach(one => {
         frag.appendChild(one);
@@ -239,4 +367,18 @@ export function getTargetBaseOnuuid(componentTree, uuid) {
     }
     Ite(componentTree, uuid);
     return target;
+}
+
+export function eraseEditingNowBaseonUUID(componentTree, uuid) {
+    function Ite(node, uuid) {
+        if (node.current.uuid !== uuid) {
+            node.current.isEditingNow = false;
+        }
+        if (node.children.length > 0) {
+            node.children.forEach(item => {
+                Ite(item, uuid);
+            });
+        }
+    }
+    Ite(componentTree, uuid);
 }

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { message } from 'antd';
-import { paintDisplayLayout, checkisConflict, addNodeToProperSite, deleteANodeOnTree } from '@/utils/common.js';
+import { paintDisplayLayout, checkisConflict, addNodeToProperSite, deleteANodeOnTree, eraseEditingNowBaseonUUID } from '@/utils/common.js';
 import { uuid } from '@/utils/common.js';
 import { ITEM_DEFAULT_WIDTH, ITEM_DEFAULT_HEIGHT } from '@/constants/common.js';
 
@@ -20,13 +20,18 @@ export default function(sizeData, settings, editing ) {
         let yOffset = e.dataTransfer.getData('yOffset');
         let xOffset = e.dataTransfer.getData('xOffset');
         let isAgain = e.dataTransfer.getData('again');
+        let isEditingNow = e.dataTransfer.getData('isEditingNow');
         let componentCopy = JSON.parse(JSON.stringify(componentTree));
         let left;
         let top;
+        let width;
+        let height;
         // 第二次拖动，就需要判断一下
         if (isAgain) {
             left = e.clientX - xOffset;
             top = e.clientY - yOffset;
+            width = parseFloat(e.dataTransfer.getData('width'));
+            height = parseFloat(e.dataTransfer.getData('height'));
             let uuid = e.dataTransfer.getData('uuid');
             deleteANodeOnTree(componentTree, uuid);
             setComponentTree({ ...componentTree });
@@ -36,20 +41,22 @@ export default function(sizeData, settings, editing ) {
         }
 
         // 下面就是插入到页面当中的逻辑，先生成treeNode，再插入进去
-        let current = {
-            uuid: uuid(),
-            componentName,
-            left,
-            top,
-            width: ITEM_DEFAULT_WIDTH,
-            height: ITEM_DEFAULT_HEIGHT
+        let treeNode = {
+            current: {
+                uuid: uuid(),
+                componentName,
+                left,
+                top,
+                width: width ? width : ITEM_DEFAULT_WIDTH,
+                height: height ? height : ITEM_DEFAULT_HEIGHT,
+                isEditingNow
+            },
+            children: []
         };
-        let treeNode = {};
-        treeNode.current = current;
-        treeNode.children = [];
         // 检查是否有冲突，有的话就提示有问题
         let noConflict = checkisConflict(treeNode, componentTree);
         if (noConflict) {
+            eraseEditingNowBaseonUUID(componentTree, e.dataTransfer.getData('uuid'));
             let targetUUID = noConflict.directParent;
             // 摆放位置没有冲突，可以找到父级然后添加到树当中
             addNodeToProperSite(treeNode, componentTree, targetUUID);
@@ -79,7 +86,7 @@ export default function(sizeData, settings, editing ) {
         // 先清空画布
         canvas.innerHTML = '';
         // 然后根据树画出来
-        paintDisplayLayout(componentTree, canvas, setEditingComponent);
+        paintDisplayLayout(componentTree, canvas, setEditingComponent, setComponentTree);
     }, [componentTree]);
 
     return {

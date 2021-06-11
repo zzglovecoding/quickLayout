@@ -7,6 +7,7 @@ export default function() {
         e.dataTransfer.setData('componentName', name);
         e.dataTransfer.setData('xOffset', xOffset);
         e.dataTransfer.setData('yOffset', yOffset);
+        e.dataTransfer.setData('isEditingNow', true);
     };
 
     const handleDragEnd = (e) => {
