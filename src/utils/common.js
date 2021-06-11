@@ -223,3 +223,20 @@ export function deleteANodeOnTree(node, uuid) {
     }
     Ite(node, parseInt(uuid, 10));
 }
+
+export function getTargetBaseOnuuid(componentTree, uuid) {
+    let target;
+    function Ite(node, uuid) {
+        if (node.current.uuid === uuid) {
+            target = node;
+            return;
+        }
+        if (node.children.length > 0) {
+            node.children.forEach(item => {
+                Ite(item, uuid);
+            });
+        }
+    }
+    Ite(componentTree, uuid);
+    return target;
+}
