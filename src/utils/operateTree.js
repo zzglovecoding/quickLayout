@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-14 19:47:01
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-14 20:05:08
+ * @LastEditTime: 2021-06-15 01:14:01
  */
 
 // 清除componentTree当中，除了当前uuid的所有的isEditingNow这个属性，是为了消除激活框的状态
@@ -193,3 +193,17 @@ function decideUUID(currentBoxArr, uuidArr, componentTree) {
     return currentMin.id;
 }
 
+export function adjustLevel(componentTree) {
+    let rest = componentTree.children;
+    function Ite(node) {
+        if (node.children.length > 0) {
+            node.children.forEach(item => {
+                Ite(item);
+            });
+        }
+        // 找到最近的然后调整
+    }
+    rest.forEach(item1 => {
+        Ite(item1);
+    });
+}

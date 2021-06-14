@@ -3,12 +3,13 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-14 17:29:38
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-14 19:50:33
+ * @LastEditTime: 2021-06-15 00:40:28
  */
 import { eraseEditingNowBaseonUUID, getTargetBaseOnuuid } from '@/utils/operateTree.js';
 
 // 根据对象生成DOM
-const handleDragStart = (e, currentNode) => {
+const handleDragStart = (e, item) => {
+    let currentNode = item.current;
     // 这两个偏移值，是鼠标和元素左上角的x和y的距离
     e.stopPropagation();
     let xOffset = e.clientX - currentNode.left;
@@ -23,7 +24,8 @@ const handleDragStart = (e, currentNode) => {
     e.dataTransfer.setData('yOffset', yOffset);
     e.dataTransfer.setData('again', true);
     e.dataTransfer.setData('uuid', currentNode.uuid);
-    e.dataTransfer.setData('isEditingNow', currentNode.isEditingNow);
+    e.dataTransfer.setData('isEditingNow', true);
+    e.dataTransfer.setData('children', JSON.stringify(item.children));
 };
 
 const handleDragEnd = e => {
@@ -53,7 +55,7 @@ function generateElement(item, setEditingComponent, componentTree, setComponentT
     element.draggable = true;
     element.ondragstart = e => {
         item.current.isEditingNow = true;
-        handleDragStart(e, item.current);
+        handleDragStart(e, item);
     };
     element.ondragend = e => handleDragEnd(e);
     // 下面是点击事件
