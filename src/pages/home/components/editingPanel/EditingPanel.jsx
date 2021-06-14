@@ -1,9 +1,17 @@
+/*
+ * @Description: 右侧的属性控制栏
+ * @Author: zzglovecoding
+ * @Date: 2021-06-10 21:51:32
+ * @LastEditors: zzglovecoding
+ * @LastEditTime: 2021-06-14 19:59:41
+ */
 import React, { useContext } from 'react';
 import { Input } from 'antd';
 import { editingComponentContext } from '../../context/editingComponentContext.js';
 import { globalSettingsContext } from '../../context/globalSettingsContext.js';
 import { pageSizeContext } from '../../context/pageSizeContext.js';
-import { getTargetBaseOnuuid, isEmpty } from '@/utils/common.js';
+import { isEmpty } from '@/utils/common.js';
+import { getTargetBaseOnuuid } from '@/utils/operateTree.js';
 import styles from './style.less';
 
 export default function() {

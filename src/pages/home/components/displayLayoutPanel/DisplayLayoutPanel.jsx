@@ -10,19 +10,22 @@ export default function() {
     const settings = useContext(globalSettingsContext);
     const editing = useContext(editingComponentContext);
 
+    const gridProperties = {
+        background: '-webkit-linear-gradient(top,transparent 19px,#e1e4e8 20px),-webkit-linear-gradient(left, transparent 19px, #e1e4e8 20px)',
+        backgroundSize: '20px 20px'
+    };
+
     const {
         isShowGrid
     } = settings;
 
     const {
-        handleDropInDisplayArea,
-        handleDragOver,
-        gridProperties
+        handleDropInDisplayArea
     } = hooks(sizeData, settings, editing);
 
     return (<div className={styles.displayLayoutPanelContainer}
         onDrop={handleDropInDisplayArea}
-        onDragOver={handleDragOver}
+        onDragOver={e => e.preventDefault()}
         id="layoutContainer"
         style={isShowGrid ? gridProperties : {}}
     >

@@ -1,10 +1,19 @@
+/*
+ * @Description: 画布的state等
+ * @Author: zzglovecoding
+ * @Date: 2021-06-09 20:18:01
+ * @LastEditors: zzglovecoding
+ * @LastEditTime: 2021-06-14 20:00:18
+ */
+
 import { useEffect } from 'react';
 import { message } from 'antd';
-import { paintDisplayLayout, checkisConflict, addNodeToProperSite, deleteANodeOnTree, eraseEditingNowBaseonUUID } from '@/utils/common.js';
+import { eraseEditingNowBaseonUUID, addNodeToProperSite, checkisConflict, deleteANodeOnTree } from '@/utils/operateTree.js';
+import { paintDisplayLayout } from '@/utils/paint.js';
 import { uuid } from '@/utils/common.js';
 import { ITEM_DEFAULT_WIDTH, ITEM_DEFAULT_HEIGHT } from '@/constants/common.js';
 
-export default function(sizeData, settings, editing ) {
+export default function(_, settings, editing ) {
     const {
         componentTree,
         setComponentTree
@@ -72,15 +81,6 @@ export default function(sizeData, settings, editing ) {
         
     };
 
-    const gridProperties = {
-        background: '-webkit-linear-gradient(top,transparent 19px,#e1e4e8 20px),-webkit-linear-gradient(left, transparent 19px, #e1e4e8 20px)',
-        backgroundSize: '20px 20px'
-    };
-
-    const handleDragOver = e => {
-        e.preventDefault();
-    };
-
     useEffect(() => {
         if (componentTree.children.length === 0) {
             return;
@@ -93,8 +93,6 @@ export default function(sizeData, settings, editing ) {
     }, [componentTree]);
 
     return {
-        handleDropInDisplayArea,
-        handleDragOver,
-        gridProperties
+        handleDropInDisplayArea
     };
 }
