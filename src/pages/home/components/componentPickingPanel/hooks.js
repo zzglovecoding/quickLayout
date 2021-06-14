@@ -1,3 +1,4 @@
+import { ITEM_DEFAULT_WIDTH, ITEM_DEFAULT_HEIGHT } from '@/constants/common.js';
 
 export default function() {
     const handleDragStart = (e, name) => {
@@ -8,6 +9,8 @@ export default function() {
         e.dataTransfer.setData('xOffset', xOffset);
         e.dataTransfer.setData('yOffset', yOffset);
         e.dataTransfer.setData('isEditingNow', true);
+        e.dataTransfer.setData('width', ITEM_DEFAULT_WIDTH);
+        e.dataTransfer.setData('height', ITEM_DEFAULT_HEIGHT);
     };
 
     const handleDragEnd = (e) => {

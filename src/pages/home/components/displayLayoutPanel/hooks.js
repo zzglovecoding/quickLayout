@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-09 20:18:01
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-14 20:00:18
+ * @LastEditTime: 2021-06-14 21:57:06
  */
 
 import { useEffect } from 'react';
@@ -11,7 +11,6 @@ import { message } from 'antd';
 import { eraseEditingNowBaseonUUID, addNodeToProperSite, checkisConflict, deleteANodeOnTree } from '@/utils/operateTree.js';
 import { paintDisplayLayout } from '@/utils/paint.js';
 import { uuid } from '@/utils/common.js';
-import { ITEM_DEFAULT_WIDTH, ITEM_DEFAULT_HEIGHT } from '@/constants/common.js';
 
 export default function(_, settings, editing ) {
     const {
@@ -33,22 +32,18 @@ export default function(_, settings, editing ) {
         let componentCopy = JSON.parse(JSON.stringify(componentTree));
         let left;
         let top;
-        let width;
-        let height;
-        // 第二次拖动，就需要判断一下
+        let width = parseFloat(e.dataTransfer.getData('width'));
+        let height = parseFloat(e.dataTransfer.getData('height'));
         if (isAgain) {
             left = e.clientX - parseFloat(xOffset);
             top = e.clientY - parseFloat(yOffset);
-            width = parseFloat(e.dataTransfer.getData('width'));
-            height = parseFloat(e.dataTransfer.getData('height'));
             let uuid = e.dataTransfer.getData('uuid');
             deleteANodeOnTree(componentTree, uuid);
             setComponentTree({ ...componentTree });
         } else {
+            // 从侧边栏拖动的时候，e.clientX - xffset - 320之后，才会是元素左上角，在展示区域的坐标值
             left = e.clientX - 320 - parseFloat(xOffset);
             top = e.clientY - 70 - parseFloat(yOffset);
-            width = ITEM_DEFAULT_WIDTH;
-            height = ITEM_DEFAULT_HEIGHT;
         }
 
         // 下面就是插入到页面当中的逻辑，先生成treeNode，再插入进去
