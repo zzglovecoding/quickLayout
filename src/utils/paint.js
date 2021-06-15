@@ -5,7 +5,9 @@
  * @LastEditors: zzglovecoding
  * @LastEditTime: 2021-06-15 00:40:28
  */
+import React from 'react';
 import { eraseEditingNowBaseonUUID, getTargetBaseOnuuid } from '@/utils/operateTree.js';
+import Resizer from '@/components/resizer/Resizer.jsx';
 
 // 根据对象生成DOM
 const handleDragStart = (e, item) => {
@@ -34,63 +36,48 @@ const handleDragEnd = e => {
     e.dataTransfer.clearData();
 };
 
-function generateElement(item, setEditingComponent, componentTree, setComponentTree) {
-    let element = document.createElement(item.current.componentName);
+export function generateElement(item, setEditingComponent, componentTree, setComponentTree) {
+    let Name = item.current.componentName;
+    let left, top;
     if (item.current.parent === 1) {
-        element.style.left = item.current.left + 'px';
-        element.style.top = item.current.top + 'px';
+        left = item.current.left + 'px';
+        top = item.current.top + 'px';
     } else {
         let parent = getTargetBaseOnuuid(componentTree, item.current.parent).current;
-        let left = parent.left;
-        let top = parent.top;
-        element.style.left = item.current.left - left + 'px';
-        element.style.top = item.current.top - top + 'px';
+        left = item.current.left - parent.left + 'px';
+        top = item.current.top - parent.top + 'px';
     }
-    element.style.position = 'absolute';
-    element.style.width = item.current.width + 'px';
-    element.style.height = item.current.height + 'px';
-    element.style.cursor = 'pointer';
-    element.style.border = item.current.isEditingNow ? '1px dashed red' : '1px solid rgba(128,128,128,.3)';
-    // 下面是拖动部分的逻辑
-    element.draggable = true;
-    element.ondragstart = e => {
-        item.current.isEditingNow = true;
-        handleDragStart(e, item);
+    let style = {
+        position: 'absolute',
+        width: item.current.width + 'px',
+        height: item.current.height + 'px',
+        cursor: 'pointer',
+        border: item.current.isEditingNow ? '1px dashed red' : '1px solid rgba(128,128,128,.3)',
+        left,
+        top
     };
-    element.ondragend = e => handleDragEnd(e);
-    // 下面是点击事件
-    element.onclick = () => {
-        element.style.border = '1px dashed red';
-        eraseEditingNowBaseonUUID(componentTree, item.current.uuid);
-        item.current.isEditingNow = true;
-        setComponentTree({ ...componentTree });
-        setEditingComponent(item);
-    };
-    return element;
-}
+    let component = (<Name
+        onDragStart= {e => {
+            item.current.isEditingNow = true;
+            handleDragStart(e, item);
+        }}
+        onDragEnd = {e => handleDragEnd(e)}
+        onClick = {() => {
+            eraseEditingNowBaseonUUID(componentTree, item.current.uuid);
+            item.current.isEditingNow = true;
+            setComponentTree({ ...componentTree });
+            setEditingComponent(item);
+        }}
+        draggable={true}
+        style={style}
+        key={Math.random()}
+    >
+        {
+            item.children?.map(child => {
+                return generateElement(child, setEditingComponent, componentTree, setComponentTree);
+            })
+        }
+    </Name>);
 
-// node是指当前的虚拟dom，current是已经生成的父级真实dom
-function Ite(node, current, setEditingComponent, componentTree, setComponentTree) {
-    if (node.children.length > 0) {
-        node.children.map(item => {
-            let element = generateElement(item, setEditingComponent, componentTree, setComponentTree);
-            Ite(item, element, setEditingComponent, componentTree, setComponentTree);
-            return element;
-        }).forEach(one => {
-            current.appendChild(one);
-        });
-    }
-}
-
-// 根据componentTree，在layoutContainer中把效果图画出来
-export function paintDisplayLayout(componentTree, canvas, setEditingComponent, setComponentTree) {
-    let frag = new DocumentFragment();
-    componentTree.children.map(item => {
-        let element = generateElement(item, setEditingComponent, componentTree, setComponentTree);
-        Ite(item, element, setEditingComponent, componentTree, setComponentTree);
-        return element;
-    }).forEach(one => {
-        frag.appendChild(one);
-    });
-    canvas.appendChild(frag);
+    return component;
 }

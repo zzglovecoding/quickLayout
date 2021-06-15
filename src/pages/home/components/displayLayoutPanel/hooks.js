@@ -6,10 +6,8 @@
  * @LastEditTime: 2021-06-15 01:09:46
  */
 
-import { useEffect } from 'react';
 import { message } from 'antd';
 import { eraseEditingNowBaseonUUID, addNodeToProperSite, checkisConflict, deleteANodeOnTree, adjustLevel } from '@/utils/operateTree.js';
-import { paintDisplayLayout } from '@/utils/paint.js';
 import { uuid as uuidGenerator } from '@/utils/common.js';
 
 export default function(_, settings, editing ) {
@@ -82,8 +80,8 @@ export default function(_, settings, editing ) {
             // 摆放位置没有冲突，可以找到父级然后添加到树当中
             treeNode.current.parent = targetUUID;
             addNodeToProperSite(treeNode, componentTree, targetUUID);
-            // adjustLevel，调整一下层级关系
-            adjustLevel(componentTree);
+            // // adjustLevel，调整一下层级关系
+            // adjustLevel(componentTree);
             // 消除其他被选中状态，需要在虚拟dom完成操作之后执行
             eraseEditingNowBaseonUUID(componentTree, newNodeUUID);
             setComponentTree({ ...componentTree });
@@ -94,17 +92,6 @@ export default function(_, settings, editing ) {
         }
         
     };
-
-    useEffect(() => {
-        if (componentTree.children.length === 0) {
-            return;
-        }
-        let canvas = document.getElementById('layoutContainer');
-        // 先清空画布
-        canvas.innerHTML = '';
-        // 然后根据树画出来
-        paintDisplayLayout(componentTree, canvas, setEditingComponent, setComponentTree);
-    }, [componentTree]);
 
     return {
         handleDropInDisplayArea

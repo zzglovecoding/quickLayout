@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { pageSizeContext } from '../../context/pageSizeContext.js';
 import { globalSettingsContext } from '../../context/globalSettingsContext.js';
 import { editingComponentContext } from '../../context/editingComponentContext.js';
+import { generateElement } from '@/utils/paint.js';
 import styles from './style.less';
 import hooks from './hooks.js';
 
@@ -16,8 +17,14 @@ export default function() {
     };
 
     const {
-        isShowGrid
+        isShowGrid,
+        componentTree,
+        setComponentTree
     } = settings;
+
+    const {
+        setEditingComponent
+    } = editing;
 
     const {
         handleDropInDisplayArea
@@ -29,6 +36,10 @@ export default function() {
         id="layoutContainer"
         style={isShowGrid ? gridProperties : {}}
     >
-
+        {
+            componentTree.children.map(item => {
+                return generateElement(item, setEditingComponent, componentTree, setComponentTree);
+            })
+        }
     </div>);
 }
