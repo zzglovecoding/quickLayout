@@ -64,12 +64,12 @@ function generateElement(item, setEditingComponent, componentTree, setComponentT
         eraseEditingNowBaseonUUID(componentTree, item.current.uuid);
         item.current.isEditingNow = true;
         setComponentTree({ ...componentTree });
-        setEditingComponent(item.current);
+        setEditingComponent(item);
     };
     return element;
 }
 
-// 把这个节点下面的也都加上，采用递归
+// node是指当前的虚拟dom，current是已经生成的父级真实dom
 function Ite(node, current, setEditingComponent, componentTree, setComponentTree) {
     if (node.children.length > 0) {
         node.children.map(item => {
@@ -92,6 +92,5 @@ export function paintDisplayLayout(componentTree, canvas, setEditingComponent, s
     }).forEach(one => {
         frag.appendChild(one);
     });
-
     canvas.appendChild(frag);
 }

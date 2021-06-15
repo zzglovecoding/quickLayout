@@ -56,11 +56,11 @@ export function addNodeToProperSite(insertNode, componentTree, targetUUID) {
 }
 
 // 递归树，看有没有冲突，有冲突就需要重新摆放
-export function checkisConflict(currentBox, componentTree) {
+export function checkisConflict(currentNode, componentTree) {
     let uuidArr = [];
     let result = [];
     let flag = true;
-    let currentBoxArr = getDistance(currentBox.current);
+    let currentBoxArr = getDistance(currentNode.current);
     // 遍历每一个节点，如果有交叉，说明存在
     function Ite(node) {
         if (node.children.length > 0) {
@@ -201,7 +201,7 @@ export function adjustLevel(componentTree) {
                 Ite(item);
             });
         }
-        // 找到最近的然后调整
+        // 每个元素记录的left和top，都是相对整个页面的位置，找到最近的然后调整
     }
     rest.forEach(item1 => {
         Ite(item1);

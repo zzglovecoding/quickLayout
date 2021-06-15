@@ -8,7 +8,7 @@
 
 import { useEffect } from 'react';
 import { message } from 'antd';
-import { eraseEditingNowBaseonUUID, addNodeToProperSite, checkisConflict, deleteANodeOnTree } from '@/utils/operateTree.js';
+import { eraseEditingNowBaseonUUID, addNodeToProperSite, checkisConflict, deleteANodeOnTree, adjustLevel } from '@/utils/operateTree.js';
 import { paintDisplayLayout } from '@/utils/paint.js';
 import { uuid as uuidGenerator } from '@/utils/common.js';
 
@@ -22,12 +22,15 @@ export default function(_, settings, editing ) {
         setEditingComponent
     } = editing;
 
+    // 放在画布区域之后的回调函数
     const handleDropInDisplayArea = e => {
         e.stopPropagation();
         // 获取该节点的所有虚拟dom的子节点，然后准备添加到新节点中去
         let childrenStr = e.dataTransfer.getData('children');
         let children = childrenStr === '' ? '[]' : childrenStr;
         children = JSON.parse(children);
+
+        // 生成其他的基本数据
         let componentName = e.dataTransfer.getData('componentName');
         let yOffset = e.dataTransfer.getData('yOffset');
         let xOffset = e.dataTransfer.getData('xOffset');
@@ -35,6 +38,7 @@ export default function(_, settings, editing ) {
         let width = parseFloat(e.dataTransfer.getData('width'));
         let height = parseFloat(e.dataTransfer.getData('height'));
         let isEditingNow = e.dataTransfer.getData('isEditingNow');
+        // 深拷贝一个组件树的对象，因为马上要删除避免碰撞，所以保留一个用于后面setState回退
         let componentCopy = JSON.parse(JSON.stringify(componentTree));
         // 先删除的原因，是碰撞检测就不会碰到原先的，后面如果检测失败，会用componentCopy回退所以不用担心
         let uuid = e.dataTransfer.getData('uuid');
@@ -83,7 +87,7 @@ export default function(_, settings, editing ) {
             // 消除其他被选中状态，需要在虚拟dom完成操作之后执行
             eraseEditingNowBaseonUUID(componentTree, newNodeUUID);
             setComponentTree({ ...componentTree });
-            setEditingComponent(treeNode.current);
+            setEditingComponent(treeNode);
         } else {
             message.error('不规范的摆放，请重新摆放');
             setComponentTree({ ...componentCopy });
