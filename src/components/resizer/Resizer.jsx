@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+// resizer的样式放在了main.less当中
 
 let resizeType = null;
 let resizeStyle = null;
@@ -46,7 +47,6 @@ function offset(value = 0) {
 function handleDragStart(e, type) {
     e.stopPropagation();
     e.dataTransfer.setData('isAdjustSizing', true);
-
     resizeType = type;     // 从哪个方向拖拽
     resizeStyle = {};      // 拖拽后的样式
     startX = e.clientX;
@@ -55,7 +55,6 @@ function handleDragStart(e, type) {
 
 function handleDrag(e, style) {
     e.stopPropagation();
-
     let { clientX, clientY } = e;
     // 鼠标移到窗口外
     if (clientX <= 0 || clientY <= 0) {
@@ -133,19 +132,15 @@ function handleDrag(e, style) {
             w = width - offsetX;
             h = height;
             break;
-    }    
-        
+    }        
     let x = w / width;
     let y = h / height;
-
     if (x < 0) {
         x = 0;
     }
-
     if (y < 0) {
         y = 0;
     }        
-
     resizeStyle = {
         width: w,
         height: h,
@@ -162,7 +157,6 @@ function handleDragEnd(e, callback) {
     e.target.parentElement.style.transform = '';
     // 拉伸结束后才触发重新渲染
     callback && callback(resizeStyle);
-
     // 重置属性
     resizeType = null;
     resizeStyle = null;

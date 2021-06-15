@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-14 19:47:01
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-15 01:14:01
+ * @LastEditTime: 2021-06-15 22:31:19
  */
 
 // 清除componentTree当中，除了当前uuid的所有的isEditingNow这个属性，是为了消除激活框的状态

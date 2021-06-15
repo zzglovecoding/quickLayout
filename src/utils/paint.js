@@ -1,12 +1,12 @@
 /*
- * @Description: 根据componentTree生成真实的DOM树，然后插入到画布中
+ * @Description: 根据componentTree生成jsx树
  * @Author: zzglovecoding
  * @Date: 2021-06-14 17:29:38
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-15 00:40:28
+ * @LastEditTime: 2021-06-15 22:31:11
  */
 import React from 'react';
-import { eraseEditingNowBaseonUUID, getTargetBaseOnuuid } from '@/utils/operateTree.js';
+import { eraseEditingNowBaseonUUID, addNodeToProperSite, checkisConflict, getTargetBaseOnuuid } from '@/utils/operateTree.js';
 import Resizer from '@/components/resizer/Resizer.jsx';
 
 // 根据对象生成DOM
@@ -58,7 +58,14 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
         top
     };
     const handleResize = (resizeStyle) => {
-        console.log(resizeStyle);
+        let componentCopy = JSON.parse(JSON.stringify(item));
+        item.current.left = resizeStyle.left;
+        item.current.top = resizeStyle.top;
+        item.current.width = resizeStyle.width;
+        item.current.height = resizeStyle.height;
+        let noConflict = checkisConflict(item, componentTree);
+        setComponentTree({ ...componentTree });
+        setEditingComponent(item);
     };
     let component = (<Name
         onDragStart= {e => {
@@ -82,7 +89,7 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
             })
         }
         {
-            item.current.isEditingNow ? <Resizer onResize={handleResize} style={{ width: item.current.width, height: item.current.height }}/> : <></>
+            item.current.isEditingNow ? <Resizer onResize={handleResize} style={{ width: item.current.width, height: item.current.height, left: item.current.left, top: item.current.top }}/> : <></>
         }
     </Name>);
 
