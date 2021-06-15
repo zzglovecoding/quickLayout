@@ -1,14 +1,17 @@
 /*
- * @Description: 根据componentTree生成真实的DOM树，然后插入到画布中
+ * @Description: 根据componentTree生成jsx树
  * @Author: zzglovecoding
  * @Date: 2021-06-14 17:29:38
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-14 19:50:33
+ * @LastEditTime: 2021-06-15 22:31:11
  */
-import { eraseEditingNowBaseonUUID, getTargetBaseOnuuid } from '@/utils/operateTree.js';
+import React from 'react';
+import { eraseEditingNowBaseonUUID, addNodeToProperSite, checkisConflict, getTargetBaseOnuuid } from '@/utils/operateTree.js';
+import Resizer from '@/components/resizer/Resizer.jsx';
 
 // 根据对象生成DOM
-const handleDragStart = (e, currentNode) => {
+const handleDragStart = (e, item) => {
+    let currentNode = item.current;
     // 这两个偏移值，是鼠标和元素左上角的x和y的距离
     e.stopPropagation();
     let xOffset = e.clientX - currentNode.left;
@@ -23,7 +26,8 @@ const handleDragStart = (e, currentNode) => {
     e.dataTransfer.setData('yOffset', yOffset);
     e.dataTransfer.setData('again', true);
     e.dataTransfer.setData('uuid', currentNode.uuid);
-    e.dataTransfer.setData('isEditingNow', currentNode.isEditingNow);
+    e.dataTransfer.setData('isEditingNow', true);
+    e.dataTransfer.setData('children', JSON.stringify(item.children));
 };
 
 const handleDragEnd = e => {
@@ -32,64 +36,62 @@ const handleDragEnd = e => {
     e.dataTransfer.clearData();
 };
 
-function generateElement(item, setEditingComponent, componentTree, setComponentTree) {
-    let element = document.createElement(item.current.componentName);
+export function generateElement(item, setEditingComponent, componentTree, setComponentTree) {
+    let Name = item.current.componentName;
+    let left, top;
     if (item.current.parent === 1) {
-        element.style.left = item.current.left + 'px';
-        element.style.top = item.current.top + 'px';
+        left = item.current.left + 'px';
+        top = item.current.top + 'px';
     } else {
         let parent = getTargetBaseOnuuid(componentTree, item.current.parent).current;
-        let left = parent.left;
-        let top = parent.top;
-        element.style.left = item.current.left - left + 'px';
-        element.style.top = item.current.top - top + 'px';
+        left = item.current.left - parent.left + 'px';
+        top = item.current.top - parent.top + 'px';
     }
-    element.style.position = 'absolute';
-    element.style.width = item.current.width + 'px';
-    element.style.height = item.current.height + 'px';
-    element.style.cursor = 'pointer';
-    element.style.border = item.current.isEditingNow ? '1px dashed red' : '1px solid rgba(128,128,128,.3)';
-    // 下面是拖动部分的逻辑
-    element.draggable = true;
-    element.ondragstart = e => {
-        item.current.isEditingNow = true;
-        handleDragStart(e, item.current);
+    let style = {
+        position: 'absolute',
+        width: item.current.width + 'px',
+        height: item.current.height + 'px',
+        cursor: 'pointer',
+        border: item.current.isEditingNow ? '1px dashed rgba(128,128,128,.5)' : '1px solid rgba(128,128,128,.3)',
+        boxShadow: item.current.isEditingNow ? '2px 2px 4px rgb(136,136,136)' : '',
+        left,
+        top
     };
-    element.ondragend = e => handleDragEnd(e);
-    // 下面是点击事件
-    element.onclick = () => {
-        element.style.border = '1px dashed red';
-        eraseEditingNowBaseonUUID(componentTree, item.current.uuid);
-        item.current.isEditingNow = true;
+    const handleResize = (resizeStyle) => {
+        let componentCopy = JSON.parse(JSON.stringify(item));
+        item.current.left = resizeStyle.left;
+        item.current.top = resizeStyle.top;
+        item.current.width = resizeStyle.width;
+        item.current.height = resizeStyle.height;
+        let noConflict = checkisConflict(item, componentTree);
         setComponentTree({ ...componentTree });
-        setEditingComponent(item.current);
+        setEditingComponent(item);
     };
-    return element;
-}
+    let component = (<Name
+        onDragStart= {e => {
+            item.current.isEditingNow = true;
+            handleDragStart(e, item);
+        }}
+        onDragEnd = {e => handleDragEnd(e)}
+        onClick = {() => {
+            eraseEditingNowBaseonUUID(componentTree, item.current.uuid);
+            item.current.isEditingNow = true;
+            setComponentTree({ ...componentTree });
+            setEditingComponent(item);
+        }}
+        draggable={true}
+        style={style}
+        key={Math.random()}
+    >
+        {
+            item.children?.map(child => {
+                return generateElement(child, setEditingComponent, componentTree, setComponentTree);
+            })
+        }
+        {
+            item.current.isEditingNow ? <Resizer onResize={handleResize} style={{ width: item.current.width, height: item.current.height, left: item.current.left, top: item.current.top }}/> : <></>
+        }
+    </Name>);
 
-// 把这个节点下面的也都加上，采用递归
-function Ite(node, current, setEditingComponent, componentTree, setComponentTree) {
-    if (node.children.length > 0) {
-        node.children.map(item => {
-            let element = generateElement(item, setEditingComponent, componentTree, setComponentTree);
-            Ite(item, element, setEditingComponent, componentTree, setComponentTree);
-            return element;
-        }).forEach(one => {
-            current.appendChild(one);
-        });
-    }
-}
-
-// 根据componentTree，在layoutContainer中把效果图画出来
-export function paintDisplayLayout(componentTree, canvas, setEditingComponent, setComponentTree) {
-    let frag = new DocumentFragment();
-    componentTree.children.map(item => {
-        let element = generateElement(item, setEditingComponent, componentTree, setComponentTree);
-        Ite(item, element, setEditingComponent, componentTree, setComponentTree);
-        return element;
-    }).forEach(one => {
-        frag.appendChild(one);
-    });
-
-    canvas.appendChild(frag);
+    return component;
 }
