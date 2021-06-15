@@ -23,6 +23,9 @@ export default function(_, settings, editing ) {
     // 放在画布区域之后的回调函数
     const handleDropInDisplayArea = e => {
         e.stopPropagation();
+        // 先判断是不是拉伸大小
+        let isAdjustSizing = e.dataTransfer.getData('isAdjustSizing');
+        if (isAdjustSizing) {return;}
         // 获取该节点的所有虚拟dom的子节点，然后准备添加到新节点中去
         let childrenStr = e.dataTransfer.getData('children');
         let children = childrenStr === '' ? '[]' : childrenStr;

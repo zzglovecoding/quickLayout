@@ -52,9 +52,13 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
         width: item.current.width + 'px',
         height: item.current.height + 'px',
         cursor: 'pointer',
-        border: item.current.isEditingNow ? '1px dashed red' : '1px solid rgba(128,128,128,.3)',
+        border: item.current.isEditingNow ? '1px dashed rgba(128,128,128,.5)' : '1px solid rgba(128,128,128,.3)',
+        boxShadow: item.current.isEditingNow ? '2px 2px 4px rgb(136,136,136)' : '',
         left,
         top
+    };
+    const handleResize = (resizeStyle) => {
+        console.log(resizeStyle);
     };
     let component = (<Name
         onDragStart= {e => {
@@ -76,6 +80,9 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
             item.children?.map(child => {
                 return generateElement(child, setEditingComponent, componentTree, setComponentTree);
             })
+        }
+        {
+            item.current.isEditingNow ? <Resizer onResize={handleResize} style={{ width: item.current.width, height: item.current.height }}/> : <></>
         }
     </Name>);
 

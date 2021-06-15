@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './style.less';
 
 let resizeType = null;
 let resizeStyle = null;
@@ -8,7 +7,10 @@ let startX = 0;
 let startY = 0;
 
 export default function Resizer(props) {
-    let { style, onResize } = props;
+    let { 
+        style,
+        onResize 
+    } = props;
     let { width, height } = style;
     let events = {
         onDrag: (e) => handleDrag(e, style),
@@ -16,7 +18,7 @@ export default function Resizer(props) {
     };
 
     return (
-        <div className={styles.resizerContainer}>
+        <>
             <i onDragStart={(e) => handleDragStart(e, 'top-left')} {...events} draggable="true" className="control top-left-control" style={{ top: offset(0), left: offset(0) }}><span className="control-point"></span></i>
             <i onDragStart={(e) => handleDragStart(e, 'top')} {...events} draggable="true" className="control top-control" style={{ top: offset(0), left: offset(width / 2) }}><span className="control-point"></span></i>
             <i onDragStart={(e) => handleDragStart(e, 'top-right')} {...events} draggable="true" className="control top-right-control" style={{ top: offset(0), left: offset(width) }}><span className="control-point"></span></i>
@@ -25,14 +27,13 @@ export default function Resizer(props) {
             <i onDragStart={(e) => handleDragStart(e, 'bottom')} {...events} draggable="true" className="control bottom-control" style={{ top: offset(height), left: offset(width / 2) }}><span className="control-point"></span></i>
             <i onDragStart={(e) => handleDragStart(e, 'bottom-left')} {...events} draggable="true" className="control bottom-left-control" style={{ top: offset(height), left: offset(0) }}><span className="control-point"></span></i>
             <i onDragStart={(e) => handleDragStart(e, 'left')} {...events} draggable="true" className="control left-control" style={{ top: offset(height / 2), left: offset(0) }}><span className="control-point"></span></i>
-        </div>
+        </>
     );
 }
 
 Resizer.propTypes = {
     style: PropTypes.object,
     onResize: PropTypes.func
-    // offset
 };
 
 function offset(value = 0) {
@@ -44,6 +45,7 @@ function offset(value = 0) {
      */
 function handleDragStart(e, type) {
     e.stopPropagation();
+    e.dataTransfer.setData('isAdjustSizing', true);
 
     resizeType = type;     // 从哪个方向拖拽
     resizeStyle = {};      // 拖拽后的样式
@@ -158,7 +160,6 @@ function handleDragEnd(e, callback) {
     e.stopPropagation();
     e.target.parentElement.style.transformOrigin = '';
     e.target.parentElement.style.transform = '';
-        
     // 拉伸结束后才触发重新渲染
     callback && callback(resizeStyle);
 

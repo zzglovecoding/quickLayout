@@ -1,4 +1,5 @@
 @import url('./fonts.less');
+@wordColor:rgba(0,106,180,.8);
 
 :global {
     * {
@@ -40,5 +41,42 @@
 
     .hide {
         display: none !important;
+    }
+
+    i.control {
+        position: absolute;
+    }
+    
+    .top-left-control {
+        cursor: nw-resize;
+    }
+    .top-control {
+        cursor: n-resize;
+    }
+    .top-right-control {
+        cursor: ne-resize;
+    }
+    .right-control {
+        cursor: e-resize;
+    }
+    .bottom-right-control {
+        cursor: se-resize;
+    }
+    .bottom-control {
+        cursor: s-resize;
+    }
+    .bottom-left-control {
+        cursor: sw-resize;
+    }
+    .left-control {
+        cursor: w-resize;
+    }
+    
+    span.control-point{
+        height: 5px;
+        width: 5px;
+        border-radius: 100%;
+        display: block;
+        background: @wordColor;
     }
 }
