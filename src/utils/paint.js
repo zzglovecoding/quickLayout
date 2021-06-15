@@ -3,10 +3,11 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-14 17:29:38
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-15 22:31:11
+ * @LastEditTime: 2021-06-15 22:39:40
  */
 import React from 'react';
-import { eraseEditingNowBaseonUUID, addNodeToProperSite, checkisConflict, getTargetBaseOnuuid } from '@/utils/operateTree.js';
+import { message } from 'antd';
+import { eraseEditingNowBaseonUUID, checkisConflict, getTargetBaseOnuuid } from '@/utils/operateTree.js';
 import Resizer from '@/components/resizer/Resizer.jsx';
 
 // 根据对象生成DOM
@@ -58,14 +59,21 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
         top
     };
     const handleResize = (resizeStyle) => {
-        let componentCopy = JSON.parse(JSON.stringify(item));
+        let componentTreeCopy = JSON.parse(JSON.stringify(componentTree));
         item.current.left = resizeStyle.left;
         item.current.top = resizeStyle.top;
         item.current.width = resizeStyle.width;
         item.current.height = resizeStyle.height;
         let noConflict = checkisConflict(item, componentTree);
-        setComponentTree({ ...componentTree });
-        setEditingComponent(item);
+        if (noConflict) {
+            setComponentTree({ ...componentTree });
+            setEditingComponent(item);
+        } else {
+            message.error('拉伸调大小出现冲突，请重新拉伸');
+            setComponentTree({ ...componentTreeCopy });
+            return;
+        }
+        
     };
     let component = (<Name
         onDragStart= {e => {
