@@ -3,11 +3,11 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-14 17:29:38
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-15 22:39:40
+ * @LastEditTime: 2021-06-16 22:39:32
  */
 import React from 'react';
 import { message } from 'antd';
-import { eraseEditingNowBaseonUUID, checkisConflict, getTargetBaseOnuuid } from '@/utils/operateTree.js';
+import { eraseEditingNowBaseonUUID, checkisConflict, getTargetBaseOnuuid, adjustLevel } from '@/utils/operateTree.js';
 import Resizer from '@/components/resizer/Resizer.jsx';
 
 // 根据对象生成DOM
@@ -65,7 +65,9 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
         item.current.width = resizeStyle.width;
         item.current.height = resizeStyle.height;
         let noConflict = checkisConflict(item, componentTree);
+        // 这里不用检测children，因为原先的没有删除，调整大小是不需要考虑自身碰撞的
         if (noConflict) {
+            adjustLevel(componentTree);
             setComponentTree({ ...componentTree });
             setEditingComponent(item);
         } else {
