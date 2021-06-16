@@ -201,7 +201,25 @@ export function adjustLevel(componentTree) {
                 Ite(item);
             });
         }
-        // 每个元素记录的left和top，都是相对整个页面的位置，找到最近的然后调整
+        // 基本逻辑是
+        // 1、找到当前这个node的parentId，然后找到parentNode，然后在children当中删掉这个node
+        // 2、调用checkisConflict得到当前组件的newParentId，node.current.parent = parentID，然后找到parentNode，在children当中加入这个node
+        // ------------- 第 1 步 ----------------
+        let selfUUID = node.current.uuid;
+        let parentUUID = node.current.parent;
+        let parentNode = getTargetBaseOnuuid(componentTree, parentUUID);
+        let targetIndex;
+        parentNode.children.forEach((childNode, index) => {
+            if (childNode.current.uuid === selfUUID) {
+                targetIndex = index;
+            }
+        });
+        parentNode.children.splice(targetIndex, 1);
+        // -------------第 2 步 ----------------
+        let newParentId = checkisConflict(node, componentTree).directParent;
+        node.current.parent = newParentId;
+        let newParentNode = getTargetBaseOnuuid(componentTree, newParentId);
+        newParentNode.children.push(node);
     }
     rest.forEach(item1 => {
         Ite(item1);

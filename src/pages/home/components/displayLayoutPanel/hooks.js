@@ -84,7 +84,7 @@ export default function(_, settings, editing ) {
             treeNode.current.parent = targetUUID;
             addNodeToProperSite(treeNode, componentTree, targetUUID);
             // // adjustLevel，调整一下层级关系
-            // adjustLevel(componentTree);
+            adjustLevel(componentTree);
             // 消除其他被选中状态，需要在虚拟dom完成操作之后执行
             eraseEditingNowBaseonUUID(componentTree, newNodeUUID);
             setComponentTree({ ...componentTree });
