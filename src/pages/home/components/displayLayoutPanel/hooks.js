@@ -96,7 +96,20 @@ export default function(_, settings, editing ) {
         
     };
 
+    // 生成辅助线数组
+    const generateTickArr = (length, lineSegmentsLength) => {
+        let arr = [];
+        let currentLength = 0;
+        while (currentLength + lineSegmentsLength < length) {
+            arr.push(((currentLength + lineSegmentsLength) + ''));
+            currentLength += lineSegmentsLength;
+        }
+        arr.push((length + ''));
+        return arr;
+    };
+
     return {
-        handleDropInDisplayArea
+        handleDropInDisplayArea,
+        generateTickArr
     };
 }

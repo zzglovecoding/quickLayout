@@ -1,6 +1,6 @@
 import styles from './home.less';
 import React from 'react';
-import { Switch } from 'antd';
+import { Switch, Button } from 'antd';
 import { pageSizeContext, pageHook } from './context/pageSizeContext.js';
 import { globalSettingsContext, settingsHook } from './context/globalSettingsContext.js';
 import { editingComponentContext, editingComponentHooks } from './context/editingComponentContext.js';
@@ -17,6 +17,14 @@ export default function Home() {
     const globalSetting = settingsHook();
     const editing = editingComponentHooks();
 
+    const {
+        componentTree
+    } = globalSetting;
+
+    const handleSend = () => {
+        console.log(componentTree);
+    };
+
     return (
         <div className={styles.home}>
             <pageSizeContext.Provider value={sizeData}>
@@ -25,6 +33,9 @@ export default function Home() {
                         <div className={styles.header}>
                             <div className={styles.toolItem}>
                                 <Switch checked={globalSetting.isShowGrid} onChange={globalSetting.handleGridChange}/>
+                            </div>
+                            <div className={styles.toolItem}>
+                                <Button className={styles.sendButton} onClick={handleSend}>generate!</Button>
                             </div>
                         </div>
                         <div className={styles.workBench}>
