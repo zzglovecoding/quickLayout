@@ -5,12 +5,12 @@
  * @LastEditors: zzglovecoding
  * @LastEditTime: 2021-06-14 19:59:41
  */
-import React, { useContext } from 'react';
-import { Input, message } from 'antd';
+import React, { useContext, useEffect } from 'react';
+import { Input, message, Button } from 'antd';
 import { editingComponentContext } from '../../context/editingComponentContext.js';
 import { globalSettingsContext } from '../../context/globalSettingsContext.js';
 import { pageSizeContext } from '../../context/pageSizeContext.js';
-import { checkisConflict } from '@/utils/operateTree.js';
+import { checkisConflict, deleteANodeOnTree } from '@/utils/operateTree.js';
 import { isEmpty } from '@/utils/common.js';
 import styles from './style.less';
 
@@ -18,7 +18,8 @@ export default function() {
     const sizeData = useContext(pageSizeContext);
 
     const {
-        editingComponent
+        editingComponent,
+        setEditingComponent
     } = useContext(editingComponentContext);
 
     // 直接修改了全局的树
@@ -30,6 +31,26 @@ export default function() {
     let editingComponentDotCurrent = editingComponent.current ? editingComponent.current : {};
 
     let disabled = isEmpty(editingComponentDotCurrent);
+
+    const handleDelete = () => {
+        deleteANodeOnTree(componentTree, editingComponent.current.uuid);
+        setEditingComponent({});
+        setComponentTree({ ...componentTree });
+    };
+
+    // 正编辑的东西如果改变，就需要重新挂上监听，不然editingComponent是没有的
+    useEffect(() => {
+        const func = (e) => {
+            if (disabled) {return;}
+            if (e.key === 'Delete') {
+                handleDelete();
+            }
+        };
+        window.addEventListener('keydown', func );
+        return () => {
+            window.removeEventListener('keydown', func);
+        };
+    }, [editingComponent]);
 
     return (
         <div className={styles.container}>
@@ -159,6 +180,9 @@ export default function() {
                         }
                     }}
                 />
+            </div>
+            <div className={styles.inputRow}>
+                <Button disabled={disabled} className={styles.buttonArea} onClick={handleDelete}>delete this component</Button>
             </div>
         </div>);
 }
