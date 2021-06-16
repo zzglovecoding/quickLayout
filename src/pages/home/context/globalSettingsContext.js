@@ -6,7 +6,7 @@ const globalSettingsContext = React.createContext({
 });
 
 function settingsHook() {
-    const [isShowGrid, setIsShowGrid] = useState(false);
+    const [isShowGrid, setIsShowGrid] = useState(true);
     const [componentTree, setComponentTree] = useState({ 
         current: {
             componentName: 'body',
