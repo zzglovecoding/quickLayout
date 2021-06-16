@@ -53,7 +53,7 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
         width: item.current.width + 'px',
         height: item.current.height + 'px',
         cursor: 'pointer',
-        border: item.current.isEditingNow ? '1px dashed rgba(128,128,128,.5)' : '1px solid rgba(128,128,128,.3)',
+        border: item.current.isEditingNow ? '2px dashed rgba(128,128,128,.5)' : '1px solid rgba(128,128,128,.3)',
         boxShadow: item.current.isEditingNow ? '2px 2px 4px rgb(136,136,136)' : '',
         left,
         top
@@ -75,7 +75,7 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
         }
         
     };
-    let component = (<Name
+    let component = (<div
         onDragStart= {e => {
             item.current.isEditingNow = true;
             handleDragStart(e, item);
@@ -102,7 +102,7 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
         {
             <span style={{ fontWeight: '700', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', color: 'rgba(0, 106, 180, 0.8)' }}>{item.current.componentName}</span>
         }
-    </Name>);
+    </div>);
 
     return component;
 }
