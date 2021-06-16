@@ -1,4 +1,11 @@
-import React, { useState, useEffect } from 'react';
+/*
+ * @Description: 中间那一块展示区域的尺寸数据等
+ * @Author: zzglovecoding
+ * @Date: 2021-06-09 20:18:01
+ * @LastEditors: zzglovecoding
+ * @LastEditTime: 2021-06-16 21:37:30
+ */
+import React, { useState } from 'react';
 
 const pageSizeContext = React.createContext({
     sizeData: {}

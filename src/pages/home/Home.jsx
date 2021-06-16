@@ -1,3 +1,10 @@
+/*
+ * @Description: 整个页面
+ * @Author: zzglovecoding
+ * @Date: 2021-06-08 20:39:59
+ * @LastEditors: zzglovecoding
+ * @LastEditTime: 2021-06-16 21:41:46
+ */
 import styles from './home.less';
 import React from 'react';
 import { Switch, Button } from 'antd';
@@ -22,7 +29,7 @@ export default function Home() {
     } = globalSetting;
 
     const handleSend = () => {
-        console.log(componentTree);
+        // console.log(componentTree);
     };
 
     return (

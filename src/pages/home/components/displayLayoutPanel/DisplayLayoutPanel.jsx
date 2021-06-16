@@ -1,3 +1,10 @@
+/*
+ * @Description: 中间展示区域的逻辑
+ * @Author: zzglovecoding
+ * @Date: 2021-06-09 20:18:01
+ * @LastEditors: zzglovecoding
+ * @LastEditTime: 2021-06-16 21:37:43
+ */
 import React, { useContext } from 'react';
 import { pageSizeContext } from '../../context/pageSizeContext.js';
 import { globalSettingsContext } from '../../context/globalSettingsContext.js';
