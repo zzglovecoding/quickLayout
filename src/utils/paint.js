@@ -99,6 +99,9 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
         {
             item.current.isEditingNow ? <Resizer onResize={handleResize} style={{ width: item.current.width, height: item.current.height, left: item.current.left, top: item.current.top }}/> : <></>
         }
+        {
+            <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', color: 'rgba(0, 106, 180, 0.8)' }}>{item.current.componentName}</span>
+        }
     </Name>);
 
     return component;
