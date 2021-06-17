@@ -20,7 +20,7 @@ module.exports = {
         'selector-pseudo-class-case': 'lower',
         'selector-type-case': 'lower',
         'media-feature-name-no-unknown': true,
-        'at-rule-no-unknown': true,
+        // 'at-rule-no-unknown': true,
         'comment-no-empty': true,
         'no-descending-specificity': true,
         'no-duplicate-at-import-rules': true,

@@ -7,7 +7,7 @@
  */
 import styles from './home.less';
 import React from 'react';
-import { Switch, Button, Modal, message } from 'antd';
+import { Switch, Button, Modal, message, Select } from 'antd';
 import { pageSizeContext, pageHook } from './context/pageSizeContext.js';
 import { globalSettingsContext, settingsHook } from './context/globalSettingsContext.js';
 import { editingComponentContext, editingComponentHooks } from './context/editingComponentContext.js';
@@ -26,7 +26,8 @@ export default function Home() {
     const editing = editingComponentHooks();
 
     const {
-        componentTree
+        componentTree,
+        setComponentTree
     } = globalSetting;
 
     const handleSend = () => {
@@ -70,6 +71,14 @@ export default function Home() {
         });
     };
 
+    const selectOpts = [
+        { value: 'useState', key: 'useState' },
+        { value: 'useEffect', key: 'useEffect' },
+        { value: 'useMemo', key: 'useMemo' },
+        { value: 'useCallback', key: 'useCallback' },
+        { value: 'useRef', key: 'useRef' }
+    ];
+
     return (
         <div className={styles.home}>
             <pageSizeContext.Provider value={sizeData}>
@@ -81,6 +90,9 @@ export default function Home() {
                             </div>
                             <div className={styles.toolItem}>
                                 <Button className={styles.sendButton} onClick={handleSend}>generate!</Button>
+                            </div>
+                            <div className={styles.toolItem}>
+                                <Select options={selectOpts} mode="multiple" allowClear onChange={selectChange}/>
                             </div>
                         </div>
                         <div className={styles.workBench}>
