@@ -54,6 +54,34 @@
                 letter-spacing: 1px;
             }
         }
+        .toolItem:nth-child(2) {
+            width:100px;
+            height: 30px;
+            margin-left: 15px;
+            top: -2px;
+            position:relative;
+            .sendButton {
+                border-radius:5px;
+                height: 30px;
+                color:@wordColor;
+                margin-bottom: 3px;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 2px;
+            }
+            &::after{
+                content: 'generate file content';
+                display: inline-block;
+                width:150px;
+                vertical-align: middle;
+                position:absolute;
+                left: -18px;
+                top: 25px;
+                font-size:10px;
+                margin-top: 10px;
+                letter-spacing: 1px;
+            }
+        }
     }
     
 }

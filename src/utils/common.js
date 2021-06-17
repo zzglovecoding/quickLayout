@@ -129,3 +129,11 @@ export function fixToSupLine() {
 export function uuid() {
     return Math.floor(Math.random() * +new Date());
 }
+
+export function ellipsisWord(str, len) {
+    if (str && str.length > len) {
+        return str.substring(0, len) + '..';
+    }
+
+    return str;
+}

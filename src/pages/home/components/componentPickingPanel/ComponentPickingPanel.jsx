@@ -1,3 +1,10 @@
+/*
+ * @Description: 左侧的组件挑选栏
+ * @Author: zzglovecoding
+ * @Date: 2021-06-09 00:27:13
+ * @LastEditors: zzglovecoding
+ * @LastEditTime: 2021-06-16 21:37:59
+ */
 import React from 'react';
 import data from '@/data/pageComponents.json';
 import styles from './style.less';

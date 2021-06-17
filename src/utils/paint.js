@@ -3,11 +3,11 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-14 17:29:38
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-15 22:39:40
+ * @LastEditTime: 2021-06-16 22:39:32
  */
 import React from 'react';
 import { message } from 'antd';
-import { eraseEditingNowBaseonUUID, checkisConflict, getTargetBaseOnuuid } from '@/utils/operateTree.js';
+import { eraseEditingNowBaseonUUID, checkisConflict, getTargetBaseOnuuid, adjustLevel } from '@/utils/operateTree.js';
 import Resizer from '@/components/resizer/Resizer.jsx';
 
 // 根据对象生成DOM
@@ -53,7 +53,7 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
         width: item.current.width + 'px',
         height: item.current.height + 'px',
         cursor: 'pointer',
-        border: item.current.isEditingNow ? '1px dashed rgba(128,128,128,.5)' : '1px solid rgba(128,128,128,.3)',
+        border: item.current.isEditingNow ? '2px dashed rgba(128,128,128,.5)' : '1px solid rgba(128,128,128,.3)',
         boxShadow: item.current.isEditingNow ? '2px 2px 4px rgb(136,136,136)' : '',
         left,
         top
@@ -65,7 +65,9 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
         item.current.width = resizeStyle.width;
         item.current.height = resizeStyle.height;
         let noConflict = checkisConflict(item, componentTree);
+        // 这里不用检测children，因为原先的没有删除，调整大小是不需要考虑自身碰撞的
         if (noConflict) {
+            adjustLevel(componentTree);
             setComponentTree({ ...componentTree });
             setEditingComponent(item);
         } else {
@@ -75,7 +77,7 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
         }
         
     };
-    let component = (<Name
+    let component = (<div
         onDragStart= {e => {
             item.current.isEditingNow = true;
             handleDragStart(e, item);
@@ -99,7 +101,10 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
         {
             item.current.isEditingNow ? <Resizer onResize={handleResize} style={{ width: item.current.width, height: item.current.height, left: item.current.left, top: item.current.top }}/> : <></>
         }
-    </Name>);
+        {
+            <span style={{ fontWeight: '700', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', color: 'rgba(0, 106, 180, 0.8)' }}>{item.current.componentName}</span>
+        }
+    </div>);
 
     return component;
 }

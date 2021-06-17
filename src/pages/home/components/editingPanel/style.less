@@ -50,5 +50,16 @@
                 content:'top';
             }
         }
+        &:nth-last-child(1) {
+            &::before {
+                content:'delete';
+            }
+            .buttonArea {
+                color:@wordColor;
+                width:100%;
+                letter-spacing:1px;
+                font-weight: 700;
+            }
+        }
     }
 }

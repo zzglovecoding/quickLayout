@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-09 20:18:01
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-15 01:09:46
+ * @LastEditTime: 2021-06-16 21:34:17
  */
 
 import { message } from 'antd';
@@ -77,14 +77,19 @@ export default function(_, settings, editing ) {
         };
         // 检查新节点与整个节点树的冲突关系
         let noConflict = checkisConflict(treeNode, componentTree);
-        if (noConflict) {
+        let forChildren = {
+            current: componentTree.current,
+            children: [...children]
+        };
+        let noConflictWithChildren = checkisConflict(treeNode, forChildren);
+        if (noConflict && noConflictWithChildren) {
             // noConflict的directParent是之前的最近父级，但是父级可能会被删掉，导致他的子元素找不到原先的uuid了
             let targetUUID = noConflict.directParent;
             // 摆放位置没有冲突，可以找到父级然后添加到树当中
             treeNode.current.parent = targetUUID;
             addNodeToProperSite(treeNode, componentTree, targetUUID);
             // // adjustLevel，调整一下层级关系
-            // adjustLevel(componentTree);
+            adjustLevel(componentTree);
             // 消除其他被选中状态，需要在虚拟dom完成操作之后执行
             eraseEditingNowBaseonUUID(componentTree, newNodeUUID);
             setComponentTree({ ...componentTree });
@@ -96,7 +101,20 @@ export default function(_, settings, editing ) {
         
     };
 
+    // 生成辅助线数组
+    const generateTickArr = (length, lineSegmentsLength) => {
+        let arr = [];
+        let currentLength = 0;
+        while (currentLength + lineSegmentsLength < length) {
+            arr.push(((currentLength + lineSegmentsLength) + ''));
+            currentLength += lineSegmentsLength;
+        }
+        arr.push((length + ''));
+        return arr;
+    };
+
     return {
-        handleDropInDisplayArea
+        handleDropInDisplayArea,
+        generateTickArr
     };
 }
