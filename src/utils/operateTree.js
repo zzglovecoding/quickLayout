@@ -219,7 +219,8 @@ export function adjustLevel(componentTree) {
         let newParentId = checkisConflict(node, componentTree).directParent;
         node.current.parent = newParentId;
         let newParentNode = getTargetBaseOnuuid(componentTree, newParentId);
-        newParentNode.children.push(node);
+        // 此处不能简单的push进去，否则改变了原数组，后面遍历还是会遍历到这里来
+        newParentNode.children.splice(targetIndex, 0, node);
     }
     rest.forEach(item1 => {
         Ite(item1);

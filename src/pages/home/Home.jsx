@@ -56,7 +56,7 @@ export default function Home() {
             width: 600,
             maskClosable: true,
             content:
-            <div>
+            <div style={{ whiteSpace: 'pre' }}>
                 {
                     finalStrArr.map(item => {
                         return <div className="infoRow" key={Math.random()}

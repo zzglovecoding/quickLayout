@@ -1,3 +1,4 @@
+import { isString } from './common.js';
 
 export function getReactImport(finalStrArr) {
     let reactImportStr = 'import React from \'react\';';
@@ -33,7 +34,7 @@ export function getAntdImport(finalStrArr, componentTree) {
     }
 }
 
-// 根据componentTree生成嵌套结构的dom
+// 根据componentTree生成嵌套结构的dom数组
 function getData(node) {
     let current = `<${node.current.componentName}>~</${node.current.componentName}>`;
     let children;
@@ -47,21 +48,45 @@ function getData(node) {
     let close = startAndEnd[1];
     if (!children) {
         let final = [open, close];
-        return final.join('');
+        return final;
     }
     let final = [open, ...children, close];
-    return final.join('');
+    return final; 
+}
+
+// 生成合适的制表符缩进
+function addTabPrefix(arr, currentNums) {
+    arr.forEach((str, index) => {
+        if (isString(str)) {
+            str = ('\t'.repeat(currentNums)) + str;
+            arr[index] = str;
+        } else {
+            addTabPrefix(str, currentNums + 1);
+        }
+    });
+}
+
+function convertToStr(dom) {
+    dom.forEach(item => {
+
+    });
 }
 
 export function getComponentInfomation(finalStrArr, componentTree) {
     let componentArr = [];
     componentArr.push('export default function() {');
-    componentArr.push('return(<div className={styles.container}>');
+    componentArr.push('\treturn(<div className={styles.container}>');
 
-    let str = getData(componentTree).slice(6, -7);
-    componentArr.push(str);
+    let arr = getData(componentTree);
+    arr = arr.slice(1, -1);
+    arr.forEach(item => {
+        addTabPrefix(item, 2);
+    });
+    arr.forEach(dom => {
+        convertToStr(dom);
+    });
 
-    componentArr.push('</div>)');
+    componentArr.push('\t</div>)');
     componentArr.push('}');
     finalStrArr.push(...componentArr);
 }
