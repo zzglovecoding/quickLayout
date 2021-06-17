@@ -3,12 +3,13 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-14 17:29:38
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-16 22:39:32
+ * @LastEditTime: 2021-06-18 01:27:17
  */
 import React from 'react';
 import { message } from 'antd';
-import { eraseEditingNowBaseonUUID, checkisConflict, getTargetBaseOnuuid, adjustLevel } from '@/utils/operateTree.js';
+import { deleteANodeOnTree, eraseEditingNowBaseonUUID, checkisConflict, getTargetBaseOnuuid, adjustLevel, addNodeToProperSite } from '@/utils/operateTree.js';
 import Resizer from '@/components/resizer/Resizer.jsx';
+import { uuid as uuidGenerator } from '@/utils/common.js';
 
 // 根据对象生成DOM
 const handleDragStart = (e, item) => {
@@ -38,7 +39,6 @@ const handleDragEnd = e => {
 };
 
 export function generateElement(item, setEditingComponent, componentTree, setComponentTree) {
-    let Name = item.current.componentName;
     let left, top;
     if (item.current.parent === 1) {
         left = item.current.left + 'px';
@@ -64,9 +64,24 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
         item.current.top = resizeStyle.top;
         item.current.width = resizeStyle.width;
         item.current.height = resizeStyle.height;
-        let noConflict = checkisConflict(item, componentTree);
-        // 这里不用检测children，因为原先的没有删除，调整大小是不需要考虑自身碰撞的
+        let newNodeUUID = uuidGenerator();
+        let children = [...item.children];
+        children.forEach(item => {
+            item.current.parent = newNodeUUID;
+        });
+        deleteANodeOnTree(componentTree, item.current.uuid);
+        let treeNode = {
+            current: {
+                ...item.current,
+                uuid: newNodeUUID
+            },
+            children: children
+        };
+        let noConflict = checkisConflict(treeNode, componentTree);
         if (noConflict) {
+            let targetUUID = noConflict.directParent;
+            treeNode.current.parent = targetUUID;
+            addNodeToProperSite(treeNode, componentTree, targetUUID);
             adjustLevel(componentTree);
             setComponentTree({ ...componentTree });
             setEditingComponent(item);

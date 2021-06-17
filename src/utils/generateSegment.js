@@ -1,3 +1,10 @@
+/*
+ * @Description: 生成文件信息的一些函数
+ * @Author: zzglovecoding
+ * @Date: 2021-06-17 20:58:30
+ * @LastEditors: zzglovecoding
+ * @LastEditTime: 2021-06-17 22:26:09
+ */
 import { isString } from './common.js';
 
 export function getReactImport(finalStrArr) {
@@ -18,7 +25,11 @@ export function getAntdImport(finalStrArr, componentTree) {
         }
         let componentName = node.current.componentName;
         if (componentName.indexOf('-') > 0) {
-            importInfoArr.push(componentName.split('-')[1]);
+            let rName = componentName.split('-')[1];
+            importInfoArr.push(rName);
+            node.current.realComponentName = rName;
+        } else {
+            node.current.realComponentName = componentName;
         }
     }
     componentTree.children.forEach(item => {
@@ -36,7 +47,7 @@ export function getAntdImport(finalStrArr, componentTree) {
 
 // 根据componentTree生成嵌套结构的dom数组
 function getData(node) {
-    let current = `<${node.current.componentName}>~</${node.current.componentName}>`;
+    let current = `<${node.current.realComponentName}>~</${node.current.realComponentName}>`;
     let children;
     if (node.children.length > 0) {
         children = node.children.map(item => {
@@ -54,7 +65,7 @@ function getData(node) {
     return final; 
 }
 
-// 生成合适的制表符缩进
+// 生成合适个数的制表符缩进
 function addTabPrefix(arr, currentNums) {
     arr.forEach((str, index) => {
         if (isString(str)) {
@@ -66,9 +77,14 @@ function addTabPrefix(arr, currentNums) {
     });
 }
 
-function convertToStr(dom) {
-    dom.forEach(item => {
-
+// 把字符串添加到arr当中，准备push到componentArr
+function convertToStr(node, compoArr) {
+    node.forEach(item => {
+        if (isString(item)) {
+            compoArr.push(item);
+        } else {
+            convertToStr(item, compoArr);
+        }
     });
 }
 
@@ -82,10 +98,11 @@ export function getComponentInfomation(finalStrArr, componentTree) {
     arr.forEach(item => {
         addTabPrefix(item, 2);
     });
-    arr.forEach(dom => {
-        convertToStr(dom);
+    let compoArr = [];
+    arr.forEach(node => {
+        convertToStr(node, compoArr);
     });
-
+    componentArr.push(...compoArr);
     componentArr.push('\t</div>)');
     componentArr.push('}');
     finalStrArr.push(...componentArr);
