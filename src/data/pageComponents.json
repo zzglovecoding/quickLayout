@@ -15,27 +15,27 @@
         "id":3
     },
     {
-        "type":"antd-Table",
+        "type":"a-Table",
         "isSingle":true,
         "id":4
     },
     {
-        "type":"antd-Input",
+        "type":"a-Input",
         "isSingle":true,
         "id":5
     },
     {
-        "type":"antd-Button",
+        "type":"a-Button",
         "isSingle":false,
         "id":6
     },
     {
-        "type":"antd-Form",
+        "type":"a-Form",
         "isSingle":false,
         "id":7
     },
     {
-        "type":"antd-Modal",
+        "type":"a-Modal",
         "isSingle":false,
         "id":8
     }

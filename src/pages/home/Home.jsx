@@ -7,10 +7,11 @@
  */
 import styles from './home.less';
 import React from 'react';
-import { Switch, Button } from 'antd';
+import { Switch, Button, Modal, message } from 'antd';
 import { pageSizeContext, pageHook } from './context/pageSizeContext.js';
 import { globalSettingsContext, settingsHook } from './context/globalSettingsContext.js';
 import { editingComponentContext, editingComponentHooks } from './context/editingComponentContext.js';
+import { generateJSX } from '@/utils/generateFile.js';
 
 import ComponentPickingPanel from './components/componentPickingPanel/ComponentPickingPanel.jsx';
 import DisplayLayoutPanel from './components/displayLayoutPanel/DisplayLayoutPanel.jsx';
@@ -29,7 +30,44 @@ export default function Home() {
     } = globalSetting;
 
     const handleSend = () => {
-        console.log(componentTree);
+        // if (componentTree.children.length === 0) {
+        //     message.error('还未选择任何布局!');
+        //     return;
+        // }
+        let finalStrArr = generateJSX(componentTree);
+        Modal.confirm({
+            title: <div style={{
+                fontSize: '16px',
+                margin: '0 auto',
+                color: '#374567',
+                width: '50px'
+            }}>
+                JSX
+            </div>,
+            icon: null,
+            cancelButtonProps: { 
+                style: { 
+                    display: 'none'
+                }
+            },
+            okButtonProps: { style: { 
+                display: 'none'
+            } },
+            width: 600,
+            maskClosable: true,
+            content:
+            <div>
+                {
+                    finalStrArr.map(item => {
+                        return <div className="infoRow" key={Math.random()}
+                        >
+                            {item}
+                        </div>;
+                    })
+                }
+            </div>
+            
+        });
     };
 
     return (
