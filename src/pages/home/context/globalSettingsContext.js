@@ -21,7 +21,8 @@ function settingsHook() {
             width: DISPLAY_LAYOUT_WIDTH,
             height: DISPLAY_LAYOUT_HEIGHT,
             left: 0,
-            top: 0
+            top: 0,
+            isSingle: false
         }, 
         children: [] 
     });

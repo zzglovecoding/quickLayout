@@ -1,12 +1,12 @@
 [
     {
         "type":"span",
-        "isSingle":false,
+        "isSingle":"",
         "id":1
     },
     {
         "type":"div",
-        "isSingle":false,
+        "isSingle":"",
         "id":2
     },
     {
@@ -26,12 +26,12 @@
     },
     {
         "type":"a-Button",
-        "isSingle":false,
+        "isSingle":"",
         "id":6
     },
     {
         "type":"a-Form",
-        "isSingle":false,
+        "isSingle":"",
         "id":7
     },
     {

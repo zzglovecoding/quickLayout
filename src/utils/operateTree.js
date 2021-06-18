@@ -243,4 +243,19 @@ export function adjustLevel(componentTree) {
     reorder(newTree);
     // 似乎不能直接换掉这个实参，为了避免对其他代码的影响，还是使用相同的地址，只是children变了而已
     componentTree.children = newTree.children;
+
+    let flag = true;
+    function findContradict(node) {
+        if (node.current.isSingle && node.children.length > 0) {
+            flag = false;
+            return;
+        }
+        if (node.children.length > 0) {
+            node.children.forEach(item => {
+                findContradict(item);
+            });
+        }
+    }
+    findContradict(componentTree);
+    return flag;
 }

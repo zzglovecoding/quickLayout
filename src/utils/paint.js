@@ -19,6 +19,7 @@ const handleDragStart = (e, item) => {
     let xOffset = e.clientX - currentNode.left;
     let yOffset = e.clientY - currentNode.top;
     e.target.style.opacity = '0.4';
+    e.dataTransfer.setData('isSingle', currentNode.isSingle);
     e.dataTransfer.setData('componentName', currentNode.componentName);
     e.dataTransfer.setData('width', currentNode.width);
     e.dataTransfer.setData('height', currentNode.height);

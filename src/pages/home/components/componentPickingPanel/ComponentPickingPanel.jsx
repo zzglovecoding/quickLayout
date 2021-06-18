@@ -23,7 +23,7 @@ export default function() {
                     return <div className={styles.componentItem}
                         key={item.id}
                         draggable={true}
-                        onDragStart={e => handleDragStart(e, item.type)}
+                        onDragStart={e => handleDragStart(e, item.type, item.isSingle)}
                         onDragEnd={handleDragEnd}
                     >
                         {item.type}
