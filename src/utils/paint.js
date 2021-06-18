@@ -78,7 +78,12 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
             children: children
         };
         let noConflict = checkisConflict(treeNode, componentTree);
-        if (noConflict) {
+        let forChildren = {
+            current: componentTree.current,
+            children: [...children]
+        };
+        let noConflictWithChildren = checkisConflict(treeNode, forChildren);
+        if (noConflict && noConflictWithChildren) {
             let targetUUID = noConflict.directParent;
             treeNode.current.parent = targetUUID;
             addNodeToProperSite(treeNode, componentTree, targetUUID);

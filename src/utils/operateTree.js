@@ -193,7 +193,30 @@ function decideUUID(currentBoxArr, uuidArr, componentTree) {
     return currentMin.id;
 }
 
+function findAllMyChildren(myId, componentTree) {
+    let arr = [];
+    function ite(node) {
+        if (node.children.length > 0) {
+            node.children.forEach(item => {
+                ite(item);
+            });
+        }
+        if (node.current.parent === myId) {
+            let copy = { ...node };
+            // 一定要清空才可以
+            copy.children = [];
+            arr.push(copy);
+        }
+    }
+    ite(componentTree);
+    return arr;
+}
+
 export function adjustLevel(componentTree) {
+    // 制作一个复制的树，然后根据这个树，为每个真实树中的节点打好新的标记
+    let copyComponentTree = JSON.parse(JSON.stringify(componentTree));
+    let newTree = JSON.parse(JSON.stringify(componentTree));
+    newTree.children = [];
     let rest = componentTree.children;
     function Ite(node) {
         if (node.children.length > 0) {
@@ -201,28 +224,23 @@ export function adjustLevel(componentTree) {
                 Ite(item);
             });
         }
-        // 基本逻辑是
-        // 1、找到当前这个node的parentId，然后找到parentNode，然后在children当中删掉这个node
-        // 2、调用checkisConflict得到当前组件的newParentId，node.current.parent = parentID，然后找到parentNode，在children当中加入这个node
-        // ------------- 第 1 步 ----------------
-        let selfUUID = node.current.uuid;
-        let parentUUID = node.current.parent;
-        let parentNode = getTargetBaseOnuuid(componentTree, parentUUID);
-        let targetIndex;
-        parentNode.children.forEach((childNode, index) => {
-            if (childNode.current.uuid === selfUUID) {
-                targetIndex = index;
-            }
-        });
-        parentNode.children.splice(targetIndex, 1);
-        // -------------第 2 步 ----------------
-        let newParentId = checkisConflict(node, componentTree).directParent;
-        node.current.parent = newParentId;
-        let newParentNode = getTargetBaseOnuuid(componentTree, newParentId);
-        // 此处不能简单的push进去，否则改变了原数组，后面遍历还是会遍历到这里来
-        newParentNode.children.splice(targetIndex, 0, node);
+        // 先把自己删除再和componentTree比，不然directParent永远是自己
+        deleteANodeOnTree(copyComponentTree, node.current.uuid);
+        node.current.parent = checkisConflict(node, copyComponentTree).directParent;
     }
     rest.forEach(item1 => {
         Ite(item1);
     });
+
+    function reorder(node) {
+        node.children.push(...findAllMyChildren(node.current.uuid, componentTree));
+        if (node.children.length > 0) {
+            node.children.forEach(item => {
+                reorder(item);
+            });
+        }
+    }
+    reorder(newTree);
+    // 似乎不能直接换掉这个实参，为了避免对其他代码的影响，还是使用相同的地址，只是children变了而已
+    componentTree.children = newTree.children;
 }
