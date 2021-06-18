@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-17 20:58:30
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-17 22:26:09
+ * @LastEditTime: 2021-06-18 13:25:20
  */
 import { isString } from './common.js';
 
@@ -47,6 +47,10 @@ export function getAntdImport(finalStrArr, componentTree) {
 
 // 根据componentTree生成嵌套结构的dom数组
 function getData(node) {
+    if (node.current.isSingle) {
+        let current = `<${node.current.realComponentName} />`;
+        return [current];
+    }
     let current = `<${node.current.realComponentName}>~</${node.current.realComponentName}>`;
     let children;
     if (node.children.length > 0) {
@@ -63,6 +67,7 @@ function getData(node) {
     }
     let final = [open, ...children, close];
     return final; 
+    
 }
 
 // 生成合适个数的制表符缩进

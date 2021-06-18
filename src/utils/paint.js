@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-14 17:29:38
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-18 01:27:17
+ * @LastEditTime: 2021-06-18 13:22:35
  */
 import React from 'react';
 import { message } from 'antd';
@@ -88,9 +88,14 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
             let targetUUID = noConflict.directParent;
             treeNode.current.parent = targetUUID;
             addNodeToProperSite(treeNode, componentTree, targetUUID);
-            adjustLevel(componentTree);
-            setComponentTree({ ...componentTree });
-            setEditingComponent(item);
+            let noSingleContains = adjustLevel(componentTree);
+            if (noSingleContains) {
+                setComponentTree({ ...componentTree });
+                setEditingComponent(item);
+            } else {
+                message.error('单标签不能嵌套其他标签');
+                setComponentTree({ ...componentTreeCopy });
+            }
         } else {
             message.error('拉伸调大小出现冲突，请重新拉伸');
             setComponentTree({ ...componentTreeCopy });
