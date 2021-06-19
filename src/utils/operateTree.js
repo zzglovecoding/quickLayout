@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-14 19:47:01
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-19 16:08:27
+ * @LastEditTime: 2021-06-19 23:50:39
  */
 
 // 清除componentTree当中，除了当前uuid的所有的isEditingNow这个属性，是为了消除激活框的状态
@@ -277,4 +277,21 @@ export function upDateRelatePosition(componentTree) {
         node.current.relativeTop = node.current.top;
         Ite(node);
     });
+}
+
+export function classNamePossessed(cName, componentTree) {
+    let noPossessed = true;
+    function Ite(node) {
+        if (node.current.className === cName) {
+            noPossessed = false;
+            return;
+        }
+        if (node.children.length > 0) {
+            node.children.forEach(item => {
+                Ite(item);
+            });
+        }
+    }
+    Ite(componentTree);
+    return noPossessed;
 }

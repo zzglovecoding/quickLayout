@@ -3,11 +3,14 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-19 13:47:43
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-19 14:50:23
+ * @LastEditTime: 2021-06-20 00:37:56
  */
 import { generateContainerStyle, generateLessBody } from './generateLessSegment';
 
-export function generateLess(componentTree) {
+export function generateLess(globalSetting) {
+    const {
+        componentTree
+    } = globalSetting;
     let lessArr = [];
     // container的样式
     lessArr.push(...generateContainerStyle(componentTree));

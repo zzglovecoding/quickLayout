@@ -3,11 +3,11 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-08 20:39:59
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-19 22:48:03
+ * @LastEditTime: 2021-06-20 00:37:42
  */
 import styles from './home.less';
 import React from 'react';
-import { Switch, Button, Modal } from 'antd';
+import { Switch, Button, Modal, message } from 'antd';
 import { pageSizeContext, pageHook } from './context/pageSizeContext.js';
 import { globalSettingsContext, settingsHook } from './context/globalSettingsContext.js';
 import { editingComponentContext, editingComponentHooks } from './context/editingComponentContext.js';
@@ -35,8 +35,8 @@ export default function Home() {
             message.error('还未选择任何布局!');
             return;
         }
-        let finalStrArr = generateJSX(componentTree);
-        let lessArr = generateLess(componentTree);
+        let finalStrArr = generateJSX(globalSetting);
+        let lessArr = generateLess(globalSetting);
         Modal.confirm({
             title: <div style={{
                 fontSize: '16px',
@@ -94,6 +94,9 @@ export default function Home() {
                         <div className={styles.header}>
                             <div className={styles.toolItem}>
                                 <Switch checked={globalSetting.isShowGrid} onChange={globalSetting.handleGridChange}/>
+                            </div>
+                            <div className={styles.toolItem}>
+                                <Switch checked={globalSetting.hasNetWork} onChange={globalSetting.handleNetWorkChange}/>
                             </div>
                             <div className={styles.toolItem}>
                                 <Button className={styles.sendButton} onClick={handleSend}>generate!</Button>

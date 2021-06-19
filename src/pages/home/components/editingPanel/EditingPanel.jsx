@@ -3,14 +3,14 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-10 21:51:32
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-19 22:47:01
+ * @LastEditTime: 2021-06-19 23:52:47
  */
 import React, { useContext, useEffect } from 'react';
 import { Input, message, Button } from 'antd';
 import { editingComponentContext } from '../../context/editingComponentContext.js';
 import { globalSettingsContext } from '../../context/globalSettingsContext.js';
 import { pageSizeContext } from '../../context/pageSizeContext.js';
-import { checkisConflict, deleteANodeOnTree } from '@/utils/operateTree.js';
+import { checkisConflict, deleteANodeOnTree, classNamePossessed } from '@/utils/operateTree.js';
 import { isEmpty } from '@/utils/common.js';
 import styles from './style.less';
 
@@ -184,6 +184,21 @@ export default function() {
                             setComponentTree({ ...componentTree });
                         }
                     }}
+                />
+            </div>
+            {/* className的input */}
+            <div className={styles.inputRow}>
+                <Input  disabled={disabled}
+                    value={editingComponentDotCurrent.className} onChange={e => {
+                        let flag = classNamePossessed(e.target.value, componentTree);
+                        if (flag) {
+                            editingComponentDotCurrent.className = e.target.value;
+                            setComponentTree({ ...componentTree });
+                        } else {
+                            message.error('重复的className，请重新输入className！');
+                        }
+                    }
+                    }
                 />
             </div>
             {/* delete的button */}

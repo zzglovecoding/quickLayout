@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-14 17:29:38
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-19 16:09:50
+ * @LastEditTime: 2021-06-20 00:01:41
  */
 import React from 'react';
 import { message } from 'antd';
@@ -19,6 +19,7 @@ const handleDragStart = (e, item) => {
     let xOffset = e.clientX - currentNode.left;
     let yOffset = e.clientY - currentNode.top;
     e.target.style.opacity = '0.4';
+    e.dataTransfer.setData('className', currentNode.className);
     e.dataTransfer.setData('isSingle', currentNode.isSingle);
     e.dataTransfer.setData('componentName', currentNode.componentName);
     e.dataTransfer.setData('width', currentNode.width);

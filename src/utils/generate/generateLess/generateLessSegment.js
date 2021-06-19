@@ -3,13 +3,13 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-19 13:47:53
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-19 16:11:21
+ * @LastEditTime: 2021-06-19 23:44:50
  */
 import { addLessTabPrefix, convertToStr } from '../generateCommonTools.js';
 import { isString } from '@/utils/common.js';
 
 function getLessData(node) {
-    let current = `.${node.current.realComponentName + node.current.uuid} {~}`;
+    let current = `.${node.current.className ? node.current.className : node.current.realComponentName + node.current.uuid} {~}`;
     let children;
     if (node.children.length > 0) {
         children = node.children.map(item => {

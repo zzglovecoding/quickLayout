@@ -7,10 +7,15 @@
 */
 import { getReactImport, getAntdImport, getComponentInfomation } from './generateJSXSegment.js';
 
-export function generateJSX(componentTree) {
+export function generateJSX(globalSetting) {
+    const {
+        componentTree,
+        hasNetWork
+    } = globalSetting;
+    
     let finalStrArr = [];
     // -------------react导入信息的生成--------------
-    getReactImport(finalStrArr);
+    getReactImport(finalStrArr, hasNetWork);
     // -------------antd导入信息的生成---------------
     getAntdImport(finalStrArr, componentTree);
     // ------------组件信息的生成--------------------

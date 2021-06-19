@@ -58,6 +58,20 @@
             width:100px;
             height: 30px;
             margin-left: 15px;
+            &::after{
+                content: './service.js?';
+                display: inline-block;
+                width:100px;
+                vertical-align: middle;
+                font-size:10px;
+                margin-top: 10px;
+                letter-spacing: 1px;
+            }
+        }
+        .toolItem:nth-last-child(1) {
+            width:100px;
+            height: 30px;
+            margin-left: 35px;
             top: -2px;
             position:relative;
             .sendButton {

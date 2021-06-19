@@ -3,14 +3,19 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-17 20:58:30
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-19 15:36:34
+ * @LastEditTime: 2021-06-20 00:34:46
  */
 import { addTabPrefix, convertToStr } from '../generateCommonTools.js';
 
-export function getReactImport(finalStrArr) {
+export function getReactImport(finalStrArr, hasNetWork) {
     let reactImportStr = 'import React from \'react\';';
+    let hooksImportStr = 'import hooks from \'./hooks.js\';';
     let lessImportStr = 'import styles from \'./style.less\';';
-    finalStrArr.push(reactImportStr, lessImportStr);
+    finalStrArr.push(reactImportStr);
+    if (hasNetWork) {
+        finalStrArr.push(hooksImportStr);
+    }
+    finalStrArr.push(lessImportStr);
     return finalStrArr;
 }
 
@@ -48,10 +53,10 @@ export function getAntdImport(finalStrArr, componentTree) {
 // 根据componentTree生成嵌套结构的dom数组
 function getData(node) {
     if (node.current.isSingle) {
-        let current = `<${node.current.realComponentName} className="${node.current.realComponentName + node.current.uuid}"/>`;
+        let current = `<${node.current.realComponentName} className={styles.${node.current.className ? node.current.className : node.current.realComponentName + node.current.uuid}}/>`;
         return [current];
     }
-    let current = `<${node.current.realComponentName} className="${node.current.realComponentName + node.current.uuid}">~</${node.current.realComponentName}>`;
+    let current = `<${node.current.realComponentName} className={styles.${node.current.className ? node.current.className : node.current.realComponentName + node.current.uuid}}>~</${node.current.realComponentName}>`;
     let children;
     if (node.children.length > 0) {
         children = node.children.map(item => {

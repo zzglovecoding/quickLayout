@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-09 20:18:01
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-19 16:09:38
+ * @LastEditTime: 2021-06-20 00:00:38
  */
 
 import { message } from 'antd';
@@ -37,6 +37,7 @@ export default function(_, settings, editing ) {
         let xOffset = e.dataTransfer.getData('xOffset');
         let isAgain = e.dataTransfer.getData('again');
         let isSingle = e.dataTransfer.getData('isSingle');
+        let className = e.dataTransfer.getData('className');
         let width = parseFloat(e.dataTransfer.getData('width'));
         let height = parseFloat(e.dataTransfer.getData('height'));
         let isEditingNow = e.dataTransfer.getData('isEditingNow');
@@ -73,7 +74,8 @@ export default function(_, settings, editing ) {
                 width,
                 height,
                 isEditingNow,
-                isSingle
+                isSingle,
+                className
             },
             children
         };
