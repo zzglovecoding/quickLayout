@@ -1,11 +1,11 @@
 /* 
-* @Description: 根据生成出来的配置，产生jsx和less的方法
+* @Description: 根据生成出来的配置，产生jsx的方法
 * @Author: zzg  
 * @Date: 2021-06-17 10:23:21  
  * @Last Modified by: zzg
  * @Last Modified time: 2021-06-17 14:12:59
 */
-import { getReactImport, getAntdImport, getComponentInfomation } from './generateSegment.js';
+import { getReactImport, getAntdImport, getComponentInfomation } from './generateJSXSegment.js';
 
 export function generateJSX(componentTree) {
     let finalStrArr = [];

@@ -3,11 +3,11 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-09 20:18:01
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-16 21:34:17
+ * @LastEditTime: 2021-06-19 16:09:38
  */
 
 import { message } from 'antd';
-import { eraseEditingNowBaseonUUID, addNodeToProperSite, checkisConflict, deleteANodeOnTree, adjustLevel } from '@/utils/operateTree.js';
+import { eraseEditingNowBaseonUUID, addNodeToProperSite, checkisConflict, deleteANodeOnTree, adjustLevel, upDateRelatePosition } from '@/utils/operateTree.js';
 import { uuid as uuidGenerator } from '@/utils/common.js';
 
 export default function(_, settings, editing ) {
@@ -95,6 +95,7 @@ export default function(_, settings, editing ) {
             if (noSingleContains) {
                 // 消除其他被选中状态，需要在虚拟dom完成操作之后执行
                 eraseEditingNowBaseonUUID(componentTree, newNodeUUID);
+                upDateRelatePosition(componentTree);
                 setComponentTree({ ...componentTree });
                 setEditingComponent(treeNode);
             } else {

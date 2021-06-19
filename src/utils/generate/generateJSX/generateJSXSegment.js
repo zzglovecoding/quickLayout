@@ -1,11 +1,11 @@
 /*
- * @Description: 生成文件信息的一些函数
+ * @Description: 生成jsx文件信息的一些函数
  * @Author: zzglovecoding
  * @Date: 2021-06-17 20:58:30
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-18 13:25:20
+ * @LastEditTime: 2021-06-19 15:36:34
  */
-import { isString } from './common.js';
+import { addTabPrefix, convertToStr } from '../generateCommonTools.js';
 
 export function getReactImport(finalStrArr) {
     let reactImportStr = 'import React from \'react\';';
@@ -48,10 +48,10 @@ export function getAntdImport(finalStrArr, componentTree) {
 // 根据componentTree生成嵌套结构的dom数组
 function getData(node) {
     if (node.current.isSingle) {
-        let current = `<${node.current.realComponentName} />`;
+        let current = `<${node.current.realComponentName} className="${node.current.realComponentName + node.current.uuid}"/>`;
         return [current];
     }
-    let current = `<${node.current.realComponentName}>~</${node.current.realComponentName}>`;
+    let current = `<${node.current.realComponentName} className="${node.current.realComponentName + node.current.uuid}">~</${node.current.realComponentName}>`;
     let children;
     if (node.children.length > 0) {
         children = node.children.map(item => {
@@ -68,29 +68,6 @@ function getData(node) {
     let final = [open, ...children, close];
     return final; 
     
-}
-
-// 生成合适个数的制表符缩进
-function addTabPrefix(arr, currentNums) {
-    arr.forEach((str, index) => {
-        if (isString(str)) {
-            str = ('\t'.repeat(currentNums)) + str;
-            arr[index] = str;
-        } else {
-            addTabPrefix(str, currentNums + 1);
-        }
-    });
-}
-
-// 把字符串添加到arr当中，准备push到componentArr
-function convertToStr(node, compoArr) {
-    node.forEach(item => {
-        if (isString(item)) {
-            compoArr.push(item);
-        } else {
-            convertToStr(item, compoArr);
-        }
-    });
 }
 
 export function getComponentInfomation(finalStrArr, componentTree) {

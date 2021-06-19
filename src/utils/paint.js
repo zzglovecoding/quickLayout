@@ -3,11 +3,11 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-14 17:29:38
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-18 13:22:35
+ * @LastEditTime: 2021-06-19 16:09:50
  */
 import React from 'react';
 import { message } from 'antd';
-import { deleteANodeOnTree, eraseEditingNowBaseonUUID, checkisConflict, getTargetBaseOnuuid, adjustLevel, addNodeToProperSite } from '@/utils/operateTree.js';
+import { deleteANodeOnTree, eraseEditingNowBaseonUUID, checkisConflict, getTargetBaseOnuuid, adjustLevel, addNodeToProperSite, upDateRelatePosition } from '@/utils/operateTree.js';
 import Resizer from '@/components/resizer/Resizer.jsx';
 import { uuid as uuidGenerator } from '@/utils/common.js';
 
@@ -90,6 +90,7 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
             addNodeToProperSite(treeNode, componentTree, targetUUID);
             let noSingleContains = adjustLevel(componentTree);
             if (noSingleContains) {
+                upDateRelatePosition(componentTree);
                 setComponentTree({ ...componentTree });
                 setEditingComponent(item);
             } else {

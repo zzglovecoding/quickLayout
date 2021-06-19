@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-09 20:18:01
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-16 21:37:10
+ * @LastEditTime: 2021-06-19 15:24:26
  */
 import React, { useState } from 'react';
 import { DISPLAY_LAYOUT_WIDTH, DISPLAY_LAYOUT_HEIGHT } from '@/constants/common.js';
@@ -22,7 +22,8 @@ function settingsHook() {
             height: DISPLAY_LAYOUT_HEIGHT,
             left: 0,
             top: 0,
-            isSingle: false
+            isSingle: false,
+            realComponentName: 'container'
         }, 
         children: [] 
     });

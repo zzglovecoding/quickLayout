@@ -3,15 +3,16 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-08 20:39:59
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-16 22:16:53
+ * @LastEditTime: 2021-06-19 16:00:50
  */
 import styles from './home.less';
 import React from 'react';
-import { Switch, Button, Modal, message } from 'antd';
+import { Switch, Button, Modal } from 'antd';
 import { pageSizeContext, pageHook } from './context/pageSizeContext.js';
 import { globalSettingsContext, settingsHook } from './context/globalSettingsContext.js';
 import { editingComponentContext, editingComponentHooks } from './context/editingComponentContext.js';
-import { generateJSX } from '@/utils/generateFile.js';
+import { generateJSX } from '@/utils/generate/generateJSX/generateJSXFile.js';
+import { generateLess } from '@/utils/generate/generateLess/generateLessFile.js';
 
 import ComponentPickingPanel from './components/componentPickingPanel/ComponentPickingPanel.jsx';
 import DisplayLayoutPanel from './components/displayLayoutPanel/DisplayLayoutPanel.jsx';
@@ -35,6 +36,7 @@ export default function Home() {
         //     return;
         // }
         let finalStrArr = generateJSX(componentTree);
+        let lessArr = generateLess(componentTree);
         Modal.confirm({
             title: <div style={{
                 fontSize: '16px',
@@ -42,7 +44,7 @@ export default function Home() {
                 color: '#374567',
                 width: '50px'
             }}>
-                JSX
+                File
             </div>,
             icon: null,
             cancelButtonProps: { 
@@ -53,18 +55,32 @@ export default function Home() {
             okButtonProps: { style: { 
                 display: 'none'
             } },
-            width: 600,
+            width: 1000,
             maskClosable: true,
             content:
             <div style={{ whiteSpace: 'pre' }}>
-                {
-                    finalStrArr.map(item => {
-                        return <div className="infoRow" key={Math.random()}
-                        >
-                            {item}
-                        </div>;
-                    })
-                }
+                <div style={{ width: '50%', float: 'left' }}>
+                    <div style={{ textAlign: 'center' }}>JSX</div>
+                    {
+                        finalStrArr.map(item => {
+                            return <div className="infoRow" key={Math.random()}
+                            >
+                                {item}
+                            </div>;
+                        })
+                    }
+                </div>
+                <div style={{ width: '50%', float: 'left' }}>
+                    <div style={{ textAlign: 'center' }}>Less</div>
+                    {
+                        lessArr.map(item => {
+                            return <div className="infoRow" key={Math.random()}
+                            >
+                                {item}
+                            </div>;
+                        })
+                    }
+                </div>
             </div>
             
         });
