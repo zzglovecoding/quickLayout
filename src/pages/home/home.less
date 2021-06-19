@@ -31,7 +31,7 @@
     .footer,.header {
         height:70px;
         width: 100%;
-        padding-top: 15px;
+        padding-top: 10px;
         text-align: center;
         font-size: 12px;
         font-weight:700;
@@ -40,12 +40,11 @@
         .toolItem {
             float:left;
         }
-        .toolItem:nth-child(1) {
+        .toolItem:nth-child(1),.toolItem:nth-child(2),.toolItem:nth-child(3),.toolItem:nth-child(4) {
             width:100px;
             height: 30px;
             margin-left: 15px;
             &::after{
-                content: 'grid line';
                 display: inline-block;
                 width:100px;
                 vertical-align: middle;
@@ -54,18 +53,35 @@
                 letter-spacing: 1px;
             }
         }
-        .toolItem:nth-child(2) {
-            width:100px;
-            height: 30px;
-            margin-left: 15px;
+        .toolItem:nth-child(1) {  
             &::after{
-                content: './service.js?';
-                display: inline-block;
-                width:100px;
-                vertical-align: middle;
-                font-size:10px;
-                margin-top: 10px;
-                letter-spacing: 1px;
+                content: 'grid line';
+            }
+        }
+        .toolItem:nth-child(2) {
+            &::after{
+                content: './hooks.js?';
+            }
+        }
+        .toolItem:nth-child(3),.toolItem:nth-child(4){
+            :global {
+                .ant-input {
+                    padding:3px 3px;
+                }
+            }    
+        }
+        .toolItem:nth-child(3) {
+            margin-left: 20px;
+            &::after{
+                content: 'real width';
+                margin-top: 2px;
+            }
+        }
+        .toolItem:nth-child(4) {
+            margin-left: 20px;
+            &::after{
+                content: 'real height';
+                margin-top: 2px;
             }
         }
         .toolItem:nth-last-child(1) {

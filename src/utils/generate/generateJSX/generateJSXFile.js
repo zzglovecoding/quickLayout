@@ -19,6 +19,6 @@ export function generateJSX(globalSetting) {
     // -------------antd导入信息的生成---------------
     getAntdImport(finalStrArr, componentTree);
     // ------------组件信息的生成--------------------
-    getComponentInfomation(finalStrArr, componentTree);
+    getComponentInfomation(finalStrArr, globalSetting);
     return finalStrArr;
 }

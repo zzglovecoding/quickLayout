@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-17 20:58:30
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-20 00:34:46
+ * @LastEditTime: 2021-06-20 00:50:27
  */
 import { addTabPrefix, convertToStr } from '../generateCommonTools.js';
 
@@ -75,9 +75,20 @@ function getData(node) {
     
 }
 
-export function getComponentInfomation(finalStrArr, componentTree) {
+export function getComponentInfomation(finalStrArr, globalSetting) {
+    const {
+        componentTree,
+        hasNetWork
+    } = globalSetting;
+
     let componentArr = [];
     componentArr.push('export default function() {');
+    if (hasNetWork) {
+        componentArr.push('\tconst {');
+        componentArr.push('');
+        componentArr.push('\t} = hooks()');
+        componentArr.push('');
+    }
     componentArr.push('\treturn(<div className={styles.container}>');
 
     let arr = getData(componentTree);

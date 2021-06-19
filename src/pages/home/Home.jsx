@@ -3,11 +3,11 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-08 20:39:59
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-20 00:37:42
+ * @LastEditTime: 2021-06-20 01:11:42
  */
 import styles from './home.less';
 import React from 'react';
-import { Switch, Button, Modal, message } from 'antd';
+import { Input, Switch, Button, Modal, message } from 'antd';
 import { pageSizeContext, pageHook } from './context/pageSizeContext.js';
 import { globalSettingsContext, settingsHook } from './context/globalSettingsContext.js';
 import { editingComponentContext, editingComponentHooks } from './context/editingComponentContext.js';
@@ -27,10 +27,16 @@ export default function Home() {
     const editing = editingComponentHooks();
 
     const {
+        realCanvasWidth,
+        realCanvasHeight,
         componentTree
     } = globalSetting;
 
     const handleSend = () => {
+        if (!(realCanvasWidth && realCanvasHeight)) {
+            message.error('必须输入真实画布的宽高！');
+            return;
+        }
         if (componentTree.children.length === 0) {
             message.error('还未选择任何布局!');
             return;
@@ -52,6 +58,7 @@ export default function Home() {
                     display: 'none'
                 }
             },
+            closable: true,
             okButtonProps: { style: { 
                 display: 'none'
             } },
@@ -97,6 +104,12 @@ export default function Home() {
                             </div>
                             <div className={styles.toolItem}>
                                 <Switch checked={globalSetting.hasNetWork} onChange={globalSetting.handleNetWorkChange}/>
+                            </div>
+                            <div className={styles.toolItem}>
+                                <Input value={globalSetting.realCanvasWidth} onChange={e => globalSetting.handleRealCanvasWidthInput(e.target.value)}/>
+                            </div>
+                            <div className={styles.toolItem}>
+                                <Input value={globalSetting.realCanvasHeight} onChange={e => globalSetting.handleRealCanvasHeightInput(e.target.value)}/>
                             </div>
                             <div className={styles.toolItem}>
                                 <Button className={styles.sendButton} onClick={handleSend}>generate!</Button>
