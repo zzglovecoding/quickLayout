@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-08 20:39:59
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-19 16:00:50
+ * @LastEditTime: 2021-06-19 22:48:03
  */
 import styles from './home.less';
 import React from 'react';
@@ -31,10 +31,10 @@ export default function Home() {
     } = globalSetting;
 
     const handleSend = () => {
-        // if (componentTree.children.length === 0) {
-        //     message.error('还未选择任何布局!');
-        //     return;
-        // }
+        if (componentTree.children.length === 0) {
+            message.error('还未选择任何布局!');
+            return;
+        }
         let finalStrArr = generateJSX(componentTree);
         let lessArr = generateLess(componentTree);
         Modal.confirm({

@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-10 21:51:32
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-14 19:59:41
+ * @LastEditTime: 2021-06-19 22:47:01
  */
 import React, { useContext, useEffect } from 'react';
 import { Input, message, Button } from 'antd';
@@ -55,6 +55,7 @@ export default function() {
     return (
         <div className={styles.container}>
             <h1>Component being edited now</h1>
+            {/* 宽度input */}
             <div className={styles.inputRow}>
                 <Input disabled={disabled}
                     value={editingComponentDotCurrent.width} onChange={e => {
@@ -94,6 +95,7 @@ export default function() {
                     }}
                 />
             </div>
+            {/* 高度input */}
             <div className={styles.inputRow}>
                 <Input  disabled={disabled}
                     value={editingComponentDotCurrent.height} onChange={e => {
@@ -134,6 +136,7 @@ export default function() {
                     }}
                 />
             </div>
+            {/* componentName的input */}
             <div className={styles.inputRow}>
                 <Input disabled={disabled}
                     value={editingComponentDotCurrent.componentName} onChange={e => {
@@ -143,6 +146,7 @@ export default function() {
                     
                 />
             </div>
+            {/* left的input */}
             <div className={styles.inputRow}>
                 <Input  disabled={disabled}
                     value={editingComponentDotCurrent.left} onChange={e => {
@@ -162,6 +166,7 @@ export default function() {
                     }}
                 />
             </div>
+            {/* top的input */}
             <div className={styles.inputRow}>
                 <Input  disabled={disabled}
                     value={editingComponentDotCurrent.top} onChange={e => {
@@ -181,6 +186,7 @@ export default function() {
                     }}
                 />
             </div>
+            {/* delete的button */}
             <div className={styles.inputRow}>
                 <Button disabled={disabled} className={styles.buttonArea} onClick={handleDelete}>delete this component</Button>
             </div>
