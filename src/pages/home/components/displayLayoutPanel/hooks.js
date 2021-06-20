@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-09 20:18:01
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-20 00:00:38
+ * @LastEditTime: 2021-06-21 01:09:29
  */
 
 import { message } from 'antd';
@@ -33,6 +33,8 @@ export default function(_, settings, editing ) {
 
         // 生成其他的基本数据
         let componentName = e.dataTransfer.getData('componentName');
+        let horizonPositionBase = e.dataTransfer.getData('horizonPositionBase');
+        let verticalPositionBase = e.dataTransfer.getData('verticalPositionBase');
         let yOffset = e.dataTransfer.getData('yOffset');
         let xOffset = e.dataTransfer.getData('xOffset');
         let isAgain = e.dataTransfer.getData('again');
@@ -59,6 +61,9 @@ export default function(_, settings, editing ) {
             top = e.clientY - 70 - parseFloat(yOffset);
         }
 
+        let bottom = 798 - (top + height);
+        let right = 1199 - (left + width);
+
         let newNodeUUID = uuidGenerator();
         // 更新他的children的parent全部为这个uuid,因为之前的那个父级会被删掉
         children.forEach(item => {
@@ -71,11 +76,15 @@ export default function(_, settings, editing ) {
                 componentName,
                 left,
                 top,
+                right,
+                bottom,
                 width,
                 height,
                 isEditingNow,
                 isSingle,
-                className
+                className,
+                horizonPositionBase: horizonPositionBase,
+                verticalPositionBase: verticalPositionBase
             },
             children
         };

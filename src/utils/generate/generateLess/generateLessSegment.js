@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-19 13:47:53
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-20 21:00:54
+ * @LastEditTime: 2021-06-21 01:20:17
  */
 import { addLessTabPrefix, convertToStr } from '../generateCommonTools.js';
 import { isString } from '@/utils/common.js';
@@ -24,8 +24,16 @@ function getLessData(node, widthRatio, heightRatio) {
     selfStyleArr.push('display:block;');
     selfStyleArr.push(`width:${parseFloat((node.current.width * widthRatio).toFixed(2))}px;`);
     selfStyleArr.push(`height:${parseFloat((node.current.height * heightRatio).toFixed(2))}px;`);
-    selfStyleArr.push(`left:${parseFloat((node.current.left * widthRatio).toFixed(2))}px;`);
-    selfStyleArr.push(`top:${parseFloat((node.current.top * heightRatio).toFixed(2))}px;`);
+    if (node.current.horizonPositionBase === 'left') {
+        selfStyleArr.push(`left:${parseFloat((node.current.left * widthRatio).toFixed(2))}px;`);
+    } else {
+        selfStyleArr.push(`right:${parseFloat((node.current.right * widthRatio).toFixed(2))}px;`);
+    }
+    if (node.current.verticalPositionBase === 'top') {
+        selfStyleArr.push(`top:${parseFloat((node.current.top * heightRatio).toFixed(2))}px;`);
+    } else {
+        selfStyleArr.push(`bottom:${parseFloat((node.current.bottom * heightRatio).toFixed(2))}px;`);
+    }
     if (!children) {
         let final = [open, ...selfStyleArr, close];
         return final;

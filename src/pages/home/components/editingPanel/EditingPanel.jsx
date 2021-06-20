@@ -3,9 +3,9 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-10 21:51:32
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-19 23:52:47
+ * @LastEditTime: 2021-06-21 01:16:41
  */
-import React, { useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Input, message, Button } from 'antd';
 import { editingComponentContext } from '../../context/editingComponentContext.js';
 import { globalSettingsContext } from '../../context/globalSettingsContext.js';
@@ -148,7 +148,7 @@ export default function() {
             </div>
             {/* left的input */}
             <div className={styles.inputRow}>
-                <Input  disabled={disabled}
+                <Input  disabled={disabled || editingComponentDotCurrent.horizonPositionBase !== 'left'}
                     value={editingComponentDotCurrent.left} onChange={e => {
                         editingComponentDotCurrent.left = parseFloat(e.target.value);
                         setComponentTree({ ...componentTree });
@@ -165,10 +165,14 @@ export default function() {
                         }
                     }}
                 />
+                <Button className={styles.rightButton} onClick={() => {
+                    editingComponentDotCurrent.horizonPositionBase = 'left';
+                    setComponentTree({ ...componentTree });
+                }}>use left</Button>
             </div>
             {/* top的input */}
             <div className={styles.inputRow}>
-                <Input  disabled={disabled}
+                <Input  disabled={disabled || editingComponentDotCurrent.verticalPositionBase !== 'top'}
                     value={editingComponentDotCurrent.top} onChange={e => {
                         editingComponentDotCurrent.top = parseFloat(e.target.value);
                         setComponentTree({ ...componentTree });
@@ -185,6 +189,58 @@ export default function() {
                         }
                     }}
                 />
+                <Button className={styles.rightButton} onClick={() => {
+                    editingComponentDotCurrent.verticalPositionBase = 'top';
+                    setComponentTree({ ...componentTree });
+                }}>use top</Button>
+            </div>
+            {/* right的input */}
+            <div className={styles.inputRow}>
+                <Input  disabled={(disabled || editingComponentDotCurrent.horizonPositionBase === 'left')}
+                    value={editingComponentDotCurrent.right} onChange={e => {
+                        editingComponentDotCurrent.right = parseFloat(e.target.value);
+                        setComponentTree({ ...componentTree });
+                    }
+                    }
+                    // onKeyDown={e => {
+                    //     if (e.key === 'ArrowUp') {
+                    //         editingComponentDotCurrent.top = (editingComponentDotCurrent.top + 1 > (sizeData.height - editingComponentDotCurrent.height)) ? sizeData.height - editingComponentDotCurrent.height : editingComponentDotCurrent.top + 1;
+                    //         setComponentTree({ ...componentTree });
+                    //     }
+                    //     if (e.key === 'ArrowDown') {
+                    //         editingComponentDotCurrent.top = editingComponentDotCurrent.top - 1 < 0 ? 0 : editingComponentDotCurrent.top - 1;
+                    //         setComponentTree({ ...componentTree });
+                    //     }
+                    // }}
+                />
+                <Button className={styles.rightButton} onClick={() => {
+                    editingComponentDotCurrent.horizonPositionBase = 'right';
+                    setComponentTree({ ...componentTree });
+                }}>use right</Button>
+            </div>
+            {/* bottom的input */}
+            <div className={styles.inputRow}>
+                <Input  disabled={disabled || editingComponentDotCurrent.verticalPositionBase === 'top'}
+                    value={editingComponentDotCurrent.bottom} onChange={e => {
+                        editingComponentDotCurrent.bottom = parseFloat(e.target.value);
+                        setComponentTree({ ...componentTree });
+                    }
+                    }
+                    // onKeyDown={e => {
+                    //     if (e.key === 'ArrowUp') {
+                    //         editingComponentDotCurrent.top = (editingComponentDotCurrent.top + 1 > (sizeData.height - editingComponentDotCurrent.height)) ? sizeData.height - editingComponentDotCurrent.height : editingComponentDotCurrent.top + 1;
+                    //         setComponentTree({ ...componentTree });
+                    //     }
+                    //     if (e.key === 'ArrowDown') {
+                    //         editingComponentDotCurrent.top = editingComponentDotCurrent.top - 1 < 0 ? 0 : editingComponentDotCurrent.top - 1;
+                    //         setComponentTree({ ...componentTree });
+                    //     }
+                    // }}
+                />
+                <Button className={styles.rightButton} onClick={() => {
+                    editingComponentDotCurrent.verticalPositionBase = 'bottom';
+                    setComponentTree({ ...componentTree });
+                }}>use bottom</Button>
             </div>
             {/* className的input */}
             <div className={styles.inputRow}>

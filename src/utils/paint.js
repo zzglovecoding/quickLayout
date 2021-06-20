@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-14 17:29:38
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-20 00:01:41
+ * @LastEditTime: 2021-06-21 01:10:55
  */
 import React from 'react';
 import { message } from 'antd';
@@ -32,6 +32,8 @@ const handleDragStart = (e, item) => {
     e.dataTransfer.setData('uuid', currentNode.uuid);
     e.dataTransfer.setData('isEditingNow', true);
     e.dataTransfer.setData('children', JSON.stringify(item.children));
+    e.dataTransfer.setData('horizonPositionBase', currentNode.horizonPositionBase);
+    e.dataTransfer.setData('verticalPositionBase', currentNode.verticalPositionBase);
 };
 
 const handleDragEnd = e => {
