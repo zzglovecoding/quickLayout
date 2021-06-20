@@ -64,24 +64,56 @@
             }
         }
         .toolItem:nth-child(3),.toolItem:nth-child(4){
+            text-align:left;
+            letter-spacing:0;
+            position: relative;
+            .ratio {
+                position:absolute;
+                right: 20%;
+                top: 0;
+                color:rgba(0,106,180,.3);
+                &::after {
+                    content: 'wth-ratio';
+                    width:100px;
+                    position:absolute;
+                    color:rgba(255, 0, 0,.3);
+                    top: 15px;
+                    right: -75px;
+                    letter-spacing: 0;
+                    font-size: 4px;
+                }
+            }
             :global {
                 .ant-input {
                     padding:3px 3px;
+                    width:50%;
                 }
-            }    
+            }
         }
         .toolItem:nth-child(3) {
             margin-left: 20px;
+            .ratio {
+                &::after {
+                    content: 'wth-ratio';
+                    color:rgba(255, 0, 0,.3);
+                }
+            }
             &::after{
-                content: 'real width';
+                content: 'canvas width';
                 margin-top: 2px;
             }
         }
         .toolItem:nth-child(4) {
             margin-left: 20px;
             &::after{
-                content: 'real height';
+                content: 'canvas height';
                 margin-top: 2px;
+            }
+            .ratio {
+                &::after {
+                    content: 'hght-ratio';
+                    color:rgba(255, 191, 0,.3);
+                }
             }
         }
         .toolItem:nth-last-child(1) {

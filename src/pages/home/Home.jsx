@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-08 20:39:59
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-20 01:11:42
+ * @LastEditTime: 2021-06-20 15:10:45
  */
 import styles from './home.less';
 import React from 'react';
@@ -107,9 +107,11 @@ export default function Home() {
                             </div>
                             <div className={styles.toolItem}>
                                 <Input value={globalSetting.realCanvasWidth} onChange={e => globalSetting.handleRealCanvasWidthInput(e.target.value)}/>
+                                <div className={styles.ratio}>{parseFloat((globalSetting.realCanvasWidth / 1199).toFixed(2))}</div>
                             </div>
                             <div className={styles.toolItem}>
-                                <Input value={globalSetting.realCanvasHeight} onChange={e => globalSetting.handleRealCanvasHeightInput(e.target.value)}/>
+                                <Input value={globalSetting.realCanvasHeight} onChange={e => globalSetting.handleRealCanvasHeightInput(e.target.value)} className={styles.suffixNum}/>
+                                <div className={styles.ratio}>{parseFloat((globalSetting.realCanvasHeight / 798).toFixed(2))}</div>
                             </div>
                             <div className={styles.toolItem}>
                                 <Button className={styles.sendButton} onClick={handleSend}>generate!</Button>
