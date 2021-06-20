@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-08 20:39:59
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-14 20:06:34
+ * @LastEditTime: 2021-06-20 21:27:01
  */
 
 function _getClass(object) {
@@ -65,6 +65,17 @@ export function isIE() {
         return true;
     }
     return false;
+}
+
+export function fixed(input, length) {
+    let num = input + '';
+    if (num.indexOf('.') > 0) {
+        let arr = num.split('.');
+        let minimal = arr[1].slice(0, length);
+        let integer = arr[0];
+        return parseFloat(integer + '.' + minimal);
+    }
+    return input;
 }
 
 /**

@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-19 13:47:53
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-20 14:01:06
+ * @LastEditTime: 2021-06-20 21:00:54
  */
 import { addLessTabPrefix, convertToStr } from '../generateCommonTools.js';
 import { isString } from '@/utils/common.js';
@@ -21,6 +21,7 @@ function getLessData(node, widthRatio, heightRatio) {
     let close = startAndEnd[1];
     let selfStyleArr = [];
     selfStyleArr.push('position:absolute;');
+    selfStyleArr.push('display:block;');
     selfStyleArr.push(`width:${parseFloat((node.current.width * widthRatio).toFixed(2))}px;`);
     selfStyleArr.push(`height:${parseFloat((node.current.height * heightRatio).toFixed(2))}px;`);
     selfStyleArr.push(`left:${parseFloat((node.current.left * widthRatio).toFixed(2))}px;`);

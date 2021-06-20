@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-08 20:39:59
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-20 15:10:45
+ * @LastEditTime: 2021-06-20 21:37:22
  */
 import styles from './home.less';
 import React from 'react';
@@ -11,6 +11,7 @@ import { Input, Switch, Button, Modal, message } from 'antd';
 import { pageSizeContext, pageHook } from './context/pageSizeContext.js';
 import { globalSettingsContext, settingsHook } from './context/globalSettingsContext.js';
 import { editingComponentContext, editingComponentHooks } from './context/editingComponentContext.js';
+import { fixed } from '@/utils/common.js';
 import { generateJSX } from '@/utils/generate/generateJSX/generateJSXFile.js';
 import { generateLess } from '@/utils/generate/generateLess/generateLessFile.js';
 
@@ -27,6 +28,8 @@ export default function Home() {
     const editing = editingComponentHooks();
 
     const {
+        handleRealCanvasWidthInput,
+        handleRealCanvasHeightInput,
         realCanvasWidth,
         realCanvasHeight,
         componentTree
@@ -93,6 +96,9 @@ export default function Home() {
         });
     };
 
+    let wRatio = fixed((globalSetting.realCanvasWidth / 1199), 6);
+    let hRatio = fixed((globalSetting.realCanvasHeight / 798), 6);
+
     return (
         <div className={styles.home}>
             <pageSizeContext.Provider value={sizeData}>
@@ -106,12 +112,32 @@ export default function Home() {
                                 <Switch checked={globalSetting.hasNetWork} onChange={globalSetting.handleNetWorkChange}/>
                             </div>
                             <div className={styles.toolItem}>
-                                <Input value={globalSetting.realCanvasWidth} onChange={e => globalSetting.handleRealCanvasWidthInput(e.target.value)}/>
-                                <div className={styles.ratio}>{parseFloat((globalSetting.realCanvasWidth / 1199).toFixed(2))}</div>
+                                <Input value={globalSetting.realCanvasWidth} 
+                                    onChange={e => globalSetting.handleRealCanvasWidthInput(e.target.value)}
+                                    onKeyDown={e => {
+                                        if (e.key === 'ArrowUp') {
+                                            handleRealCanvasWidthInput(globalSetting.realCanvasWidth + 1);
+                                        }
+                                        if (e.key === 'ArrowDown') {
+                                            handleRealCanvasWidthInput(globalSetting.realCanvasWidth - 1);
+                                        }
+                                    }}
+                                />
+                                <div className={styles.ratio} style={{ color: wRatio > 1 ? 'red' : wRatio === 1 ? '' : 'green' }}><span title="红色（绿色）代表真实页面中会被拉伸（压缩）">{wRatio}</span></div>
                             </div>
                             <div className={styles.toolItem}>
-                                <Input value={globalSetting.realCanvasHeight} onChange={e => globalSetting.handleRealCanvasHeightInput(e.target.value)} className={styles.suffixNum}/>
-                                <div className={styles.ratio}>{parseFloat((globalSetting.realCanvasHeight / 798).toFixed(2))}</div>
+                                <Input value={globalSetting.realCanvasHeight} 
+                                    onChange={e => globalSetting.handleRealCanvasHeightInput(e.target.value)}
+                                    onKeyDown={e => {
+                                        if (e.key === 'ArrowUp') {
+                                            handleRealCanvasHeightInput(globalSetting.realCanvasHeight + 1);
+                                        }
+                                        if (e.key === 'ArrowDown') {
+                                            handleRealCanvasHeightInput(globalSetting.realCanvasHeight - 1);
+                                        }
+                                    }}
+                                />
+                                <div className={styles.ratio} style={{ color: hRatio > 1 ? 'red' : hRatio === 1 ? '' : 'green' }}><span title="红色（绿色）代表真实页面中会被拉伸（压缩）">{hRatio}</span></div>
                             </div>
                             <div className={styles.toolItem}>
                                 <Button className={styles.sendButton} onClick={handleSend}>generate!</Button>
