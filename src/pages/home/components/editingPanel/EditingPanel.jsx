@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-10 21:51:32
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-21 22:51:05
+ * @LastEditTime: 2021-06-22 00:28:58
  */
 import React, { useContext, useEffect } from 'react';
 import { Input, message, Button, Popover } from 'antd';
@@ -28,9 +28,14 @@ export default function() {
 
     // 直接修改了全局的树
     const {
+        realCanvasWidth,
+        realCanvasHeight,
         componentTree,
         setComponentTree
     } = useContext(globalSettingsContext);
+
+    let wRatio = fixed((realCanvasWidth / 1199), 6);
+    let hRatio = fixed((realCanvasHeight / 798), 6);
 
     let editingComponentDotCurrent = editingComponent.current ? editingComponent.current : {};
 
@@ -71,10 +76,10 @@ export default function() {
             {/* 宽度input */}
             <div className={styles.inputRow}>
                 <Input disabled={disabled}
-                    value={fixed(editingComponentDotCurrent.width, 2)} onChange={e => {
+                    value={fixed(editingComponentDotCurrent.width ? editingComponentDotCurrent.width * wRatio : null, 2)} onChange={e => {
                         if (intAndDecimal.test(e.target.value)) {
                             let widthBefore = editingComponentDotCurrent.width;
-                            editingComponentDotCurrent.width = fixed(parseFloat(e.target.value), 2);
+                            editingComponentDotCurrent.width = fixed(parseFloat(e.target.value) / wRatio, 2);
                             let noConflict = checkisConflict(editingComponent, componentTree);
                             if (noConflict) {
                                 setComponentTree({ ...componentTree });
@@ -119,10 +124,10 @@ export default function() {
             {/* 高度input */}
             <div className={styles.inputRow}>
                 <Input  disabled={disabled}
-                    value={fixed(editingComponentDotCurrent.height, 2)} onChange={e => {
+                    value={fixed(editingComponentDotCurrent.height ? editingComponentDotCurrent.height * hRatio : null, 2)} onChange={e => {
                         if (intAndDecimal.test(e.target.value)) {
                             let heightBefore = editingComponentDotCurrent.height;
-                            editingComponentDotCurrent.height = fixed(parseFloat(e.target.value), 2);
+                            editingComponentDotCurrent.height = fixed(parseFloat(e.target.value) / hRatio, 2);
                             let noConflict = checkisConflict(editingComponent, componentTree);
                             if (noConflict) {
                                 setComponentTree({ ...componentTree });
@@ -168,10 +173,10 @@ export default function() {
             {/* left的input */}
             <div className={styles.inputRow}>
                 <Input  disabled={disabled || editingComponentDotCurrent.horizonPositionBase !== 'left'}
-                    value={fixed(editingComponentDotCurrent.left, 2)} onChange={e => {
+                    value={fixed(editingComponentDotCurrent.left ? editingComponentDotCurrent.left * wRatio : null, 2)} onChange={e => {
                         if (intAndDecimal.test(e.target.value)) {
                             let leftBefore = editingComponentDotCurrent.left;
-                            editingComponentDotCurrent.left = fixed(parseFloat(e.target.value), 2);
+                            editingComponentDotCurrent.left = fixed(parseFloat(e.target.value) / wRatio, 2);
                             let noConflict = checkisConflict(editingComponent, componentTree);
                             if (noConflict && editingComponentDotCurrent.left >= 0 && editingComponentDotCurrent.left <= (1199 - editingComponentDotCurrent.width)) {
                                 editingComponentDotCurrent.right = 1199 - editingComponentDotCurrent.left - editingComponentDotCurrent.width;
@@ -210,10 +215,10 @@ export default function() {
             {/* top的input */}
             <div className={styles.inputRow}>
                 <Input  disabled={disabled || editingComponentDotCurrent.verticalPositionBase !== 'top'}
-                    value={fixed(editingComponentDotCurrent.top, 2)} onChange={e => {
+                    value={fixed(editingComponentDotCurrent.top ? editingComponentDotCurrent.top * hRatio : null, 2)} onChange={e => {
                         if (intAndDecimal.test(e.target.value)) {
                             let topBefore = editingComponentDotCurrent.top;
-                            editingComponentDotCurrent.top = fixed(parseFloat(e.target.value), 2);
+                            editingComponentDotCurrent.top = fixed(parseFloat(e.target.value) / hRatio, 2);
                             let noConflict = checkisConflict(editingComponent, componentTree);
                             if (noConflict && editingComponentDotCurrent.top >= 0 && editingComponentDotCurrent.top <= (798 - editingComponentDotCurrent.height)) {
                                 editingComponentDotCurrent.bottom = 798 - editingComponentDotCurrent.height - editingComponentDotCurrent.top;
@@ -252,10 +257,10 @@ export default function() {
             {/* right的input */}
             <div className={styles.inputRow}>
                 <Input  disabled={(disabled || editingComponentDotCurrent.horizonPositionBase === 'left')}
-                    value={fixed(editingComponentDotCurrent.right, 2)} onChange={e => {
+                    value={fixed(editingComponentDotCurrent.right ? editingComponentDotCurrent.right * wRatio : null, 2)} onChange={e => {
                         if (intAndDecimal.test(e.target.value)) {
                             let rightBefore = editingComponentDotCurrent.right;
-                            editingComponentDotCurrent.right = fixed(parseFloat(e.target.value), 2);
+                            editingComponentDotCurrent.right = fixed(parseFloat(e.target.value) / wRatio, 2);
                             let noConflict = checkisConflict(editingComponent, componentTree);
                             if (noConflict && editingComponentDotCurrent.right >= 0 && editingComponentDotCurrent.right <= (1199 - editingComponentDotCurrent.width)) {
                                 editingComponentDotCurrent.left = 1199 - editingComponentDotCurrent.right - editingComponentDotCurrent.width;
@@ -294,10 +299,10 @@ export default function() {
             {/* bottom的input */}
             <div className={styles.inputRow}>
                 <Input  disabled={disabled || editingComponentDotCurrent.verticalPositionBase === 'top'}
-                    value={fixed(editingComponentDotCurrent.bottom, 2)} onChange={e => {
+                    value={fixed(editingComponentDotCurrent.bottom ? editingComponentDotCurrent.bottom * hRatio : null, 2)} onChange={e => {
                         if (intAndDecimal.test(e.target.value)) {
                             let bottomBefore = editingComponentDotCurrent.bottom;
-                            editingComponentDotCurrent.bottom = fixed(parseFloat(e.target.value), 2);
+                            editingComponentDotCurrent.bottom = fixed(parseFloat(e.target.value) / hRatio, 2);
                             let noConflict = checkisConflict(editingComponent, componentTree);
                             if (noConflict && editingComponentDotCurrent.bottom >= 0 && editingComponentDotCurrent.bottom <= (798 - editingComponentDotCurrent.height)) {
                                 editingComponentDotCurrent.top = 798 - editingComponentDotCurrent.bottom - editingComponentDotCurrent.height; 
