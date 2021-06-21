@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-10 21:51:32
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-21 01:16:41
+ * @LastEditTime: 2021-06-21 22:51:05
  */
 import React, { useContext, useEffect } from 'react';
 import { Input, message, Button, Popover } from 'antd';
@@ -45,7 +45,10 @@ export default function() {
     const {
         heightPopoverContent,
         widthPopoverContent,
-        leftPopoverContent
+        leftPopoverContent,
+        rightPopoverContent,
+        topPopoverContent,
+        bottomPopoverContent
     } = hooks(editing, componentTree);
 
     // 正编辑的东西如果改变，就需要重新挂上监听，不然editingComponent是没有的
@@ -195,13 +198,13 @@ export default function() {
                         }
                     }}
                 />
-                <Button className={styles.rightButton} onClick={() => {
+                <Button disabled={disabled || editingComponentDotCurrent.horizonPositionBase === 'left'} className={styles.rightButton} onClick={() => {
                     editingComponentDotCurrent.horizonPositionBase = 'left';
                     setComponentTree({ ...componentTree });
                 }}>use left</Button>
                 <Popover content={leftPopoverContent}
                 >
-                    <Button className={styles.adjustButton}>adjust</Button>
+                    <Button disabled={disabled || editingComponentDotCurrent.horizonPositionBase !== 'left'} className={styles.adjustButton}>adjust</Button>
                 </Popover>
             </div>
             {/* top的input */}
@@ -237,13 +240,13 @@ export default function() {
                         }
                     }}
                 />
-                <Button className={styles.rightButton} onClick={() => {
+                <Button disabled={disabled || editingComponentDotCurrent.verticalPositionBase === 'top'} className={styles.rightButton} onClick={() => {
                     editingComponentDotCurrent.verticalPositionBase = 'top';
                     setComponentTree({ ...componentTree });
                 }}>use top</Button>
-                <Popover content={<div>pop</div>}
+                <Popover content={topPopoverContent}
                 >
-                    <Button className={styles.adjustButton}>adjust</Button>
+                    <Button disabled={disabled || editingComponentDotCurrent.verticalPositionBase !== 'top'} className={styles.adjustButton}>adjust</Button>
                 </Popover>
             </div>
             {/* right的input */}
@@ -279,13 +282,13 @@ export default function() {
                         }
                     }}
                 />
-                <Button className={styles.rightButton} onClick={() => {
+                <Button disabled={disabled || editingComponentDotCurrent.horizonPositionBase === 'right'} className={styles.rightButton} onClick={() => {
                     editingComponentDotCurrent.horizonPositionBase = 'right';
                     setComponentTree({ ...componentTree });
                 }}>use right</Button>
-                <Popover content={<div>pop</div>}
+                <Popover content={rightPopoverContent}
                 >
-                    <Button className={styles.adjustButton}>adjust</Button>
+                    <Button disabled={(disabled || editingComponentDotCurrent.horizonPositionBase === 'left')} className={styles.adjustButton}>adjust</Button>
                 </Popover>
             </div>
             {/* bottom的input */}
@@ -321,13 +324,13 @@ export default function() {
                         }
                     }}
                 />
-                <Button className={styles.rightButton} onClick={() => {
+                <Button disabled={disabled || editingComponentDotCurrent.verticalPositionBase === 'bottom'} className={styles.rightButton} onClick={() => {
                     editingComponentDotCurrent.verticalPositionBase = 'bottom';
                     setComponentTree({ ...componentTree });
                 }}>use bottom</Button>
-                <Popover content={<div>pop</div>}
+                <Popover content={bottomPopoverContent}
                 >
-                    <Button className={styles.adjustButton}>adjust</Button>
+                    <Button disabled={(disabled || editingComponentDotCurrent.verticalPositionBase === 'top')} className={styles.adjustButton}>adjust</Button>
                 </Popover>
             </div>
             {/* componentName的input */}
