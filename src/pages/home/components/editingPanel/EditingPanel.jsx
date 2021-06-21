@@ -13,15 +13,18 @@ import { pageSizeContext } from '../../context/pageSizeContext.js';
 import { checkisConflict, deleteANodeOnTree, classNamePossessed } from '@/utils/operateTree.js';
 import { isEmpty, fixed } from '@/utils/common.js';
 import { intAndDecimal } from '@/utils/regex.js';
+import hooks from './hooks.js';
 import styles from './style.less';
 
 export default function() {
     const sizeData = useContext(pageSizeContext);
 
+    const editing = useContext(editingComponentContext);
+
     const {
         editingComponent,
         setEditingComponent
-    } = useContext(editingComponentContext);
+    } = editing;
 
     // 直接修改了全局的树
     const {
@@ -38,6 +41,12 @@ export default function() {
         setEditingComponent({});
         setComponentTree({ ...componentTree });
     };
+
+    const {
+        heightPopoverContent,
+        widthPopoverContent,
+        leftPopoverContent
+    } = hooks(editing, componentTree);
 
     // 正编辑的东西如果改变，就需要重新挂上监听，不然editingComponent是没有的
     useEffect(() => {
@@ -99,7 +108,10 @@ export default function() {
                         }
                     }}
                 />
-                <Popover />
+                <Popover content={widthPopoverContent}
+                >
+                    <Button disabled={disabled} className={styles.adjustButton}>adjust</Button>
+                </Popover>
             </div>
             {/* 高度input */}
             <div className={styles.inputRow}>
@@ -145,8 +157,11 @@ export default function() {
                         }
                     }}
                 />
+                <Popover content={heightPopoverContent}
+                >
+                    <Button disabled={disabled} className={styles.adjustButton}>adjust</Button>
+                </Popover>
             </div>
-            
             {/* left的input */}
             <div className={styles.inputRow}>
                 <Input  disabled={disabled || editingComponentDotCurrent.horizonPositionBase !== 'left'}
@@ -184,6 +199,10 @@ export default function() {
                     editingComponentDotCurrent.horizonPositionBase = 'left';
                     setComponentTree({ ...componentTree });
                 }}>use left</Button>
+                <Popover content={leftPopoverContent}
+                >
+                    <Button className={styles.adjustButton}>adjust</Button>
+                </Popover>
             </div>
             {/* top的input */}
             <div className={styles.inputRow}>
@@ -222,6 +241,10 @@ export default function() {
                     editingComponentDotCurrent.verticalPositionBase = 'top';
                     setComponentTree({ ...componentTree });
                 }}>use top</Button>
+                <Popover content={<div>pop</div>}
+                >
+                    <Button className={styles.adjustButton}>adjust</Button>
+                </Popover>
             </div>
             {/* right的input */}
             <div className={styles.inputRow}>
@@ -260,6 +283,10 @@ export default function() {
                     editingComponentDotCurrent.horizonPositionBase = 'right';
                     setComponentTree({ ...componentTree });
                 }}>use right</Button>
+                <Popover content={<div>pop</div>}
+                >
+                    <Button className={styles.adjustButton}>adjust</Button>
+                </Popover>
             </div>
             {/* bottom的input */}
             <div className={styles.inputRow}>
@@ -298,6 +325,10 @@ export default function() {
                     editingComponentDotCurrent.verticalPositionBase = 'bottom';
                     setComponentTree({ ...componentTree });
                 }}>use bottom</Button>
+                <Popover content={<div>pop</div>}
+                >
+                    <Button className={styles.adjustButton}>adjust</Button>
+                </Popover>
             </div>
             {/* componentName的input */}
             <div className={styles.inputRow}>

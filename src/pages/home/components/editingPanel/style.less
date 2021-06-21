@@ -38,15 +38,37 @@
                 content:'height';
             }
         }
-        &:nth-child(4),&:nth-child(5),&:nth-child(6),&:nth-child(7) {
-            position: relative;
-            .rightButton {
-                width: 110px;
-                border-radius: 5px;
-                font-size: 12px;
+        &:nth-child(2),&:nth-child(3),&:nth-child(4),&:nth-child(5),&:nth-child(6),&:nth-child(7) {
+            .adjustButton {
+                width: 100px;
+                text-align: center;
+                font-size: 6px;
                 color:@wordColor;
                 position:absolute;
                 right: 0;
+                :global {
+                    .ant-btn[disabled], .ant-btn[disabled]:hover, .ant-btn[disabled]:focus, .ant-btn[disabled]:active {
+                        width: 100px;
+                        text-align: center;
+                        font-size: 6px;
+                        position:absolute;
+                        right: 0;
+                    }
+                }
+            }
+        }
+        &:nth-child(4),&:nth-child(5),&:nth-child(6),&:nth-child(7) {
+            position: relative;
+            .adjustButton {
+                right:0;
+            }
+            .rightButton {
+                width: 100px;
+                text-align: center;
+                font-size: 6px;
+                color:@wordColor;
+                position:absolute;
+                right: 99px;
             }
         }
         &:nth-child(4) {

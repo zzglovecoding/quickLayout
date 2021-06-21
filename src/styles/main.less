@@ -94,4 +94,36 @@
         display: block;
         background: @wordColor;
     }
+
+    .ant-popover-inner-content {
+        padding:12px;
+    }
+
+    .PopoverContent {
+        input {
+            border-radius: 10px;
+            display:block;
+            width:95%;
+            padding:3px 0 3px 15px;
+            border: 1px solid #F3F3F3;
+            &::-webkit-input-placeholder {
+                color:@wordColor;
+                font-size:12px;
+            }
+        }
+        input:focus {
+            border: 1px solid @wordColor;
+            outline: none;
+        }
+        .PopoverContentItem {
+            display:block;
+            font-size:12px;
+            color: @wordColor;
+            margin-top: 10px;
+            border-radius: 10px;
+            &:nth-child(1) {
+                margin-top: 0;
+            }
+        }
+    }
 }
