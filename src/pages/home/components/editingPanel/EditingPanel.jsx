@@ -6,7 +6,7 @@
  * @LastEditTime: 2021-06-21 01:16:41
  */
 import React, { useContext, useEffect } from 'react';
-import { Input, message, Button } from 'antd';
+import { Input, message, Button, Popover } from 'antd';
 import { editingComponentContext } from '../../context/editingComponentContext.js';
 import { globalSettingsContext } from '../../context/globalSettingsContext.js';
 import { pageSizeContext } from '../../context/pageSizeContext.js';
@@ -99,6 +99,7 @@ export default function() {
                         }
                     }}
                 />
+                <Popover />
             </div>
             {/* 高度input */}
             <div className={styles.inputRow}>
@@ -145,16 +146,7 @@ export default function() {
                     }}
                 />
             </div>
-            {/* componentName的input */}
-            <div className={styles.inputRow}>
-                <Input disabled={disabled}
-                    value={editingComponentDotCurrent.componentName} onChange={e => {
-                        editingComponentDotCurrent.componentName = e.target.value;
-                        setComponentTree({ ...componentTree });
-                    }}
-                    
-                />
-            </div>
+            
             {/* left的input */}
             <div className={styles.inputRow}>
                 <Input  disabled={disabled || editingComponentDotCurrent.horizonPositionBase !== 'left'}
@@ -178,10 +170,12 @@ export default function() {
                     onKeyDown={e => {
                         if (e.key === 'ArrowUp') {
                             editingComponentDotCurrent.left = (editingComponentDotCurrent.left + 1 > (sizeData.width - editingComponentDotCurrent.width)) ? sizeData.width - editingComponentDotCurrent.width : editingComponentDotCurrent.left + 1;
+                            editingComponentDotCurrent.right = 1199 - editingComponentDotCurrent.left - editingComponentDotCurrent.width;
                             setComponentTree({ ...componentTree });
                         }
                         if (e.key === 'ArrowDown') {
                             editingComponentDotCurrent.left = editingComponentDotCurrent.left - 1 < 0 ? 0 : editingComponentDotCurrent.left - 1;
+                            editingComponentDotCurrent.right = 1199 - editingComponentDotCurrent.left - editingComponentDotCurrent.width;
                             setComponentTree({ ...componentTree });
                         }
                     }}
@@ -214,10 +208,12 @@ export default function() {
                     onKeyDown={e => {
                         if (e.key === 'ArrowUp') {
                             editingComponentDotCurrent.top = (editingComponentDotCurrent.top + 1 > (sizeData.height - editingComponentDotCurrent.height)) ? sizeData.height - editingComponentDotCurrent.height : editingComponentDotCurrent.top + 1;
+                            editingComponentDotCurrent.bottom = 798 - editingComponentDotCurrent.top - editingComponentDotCurrent.height;
                             setComponentTree({ ...componentTree });
                         }
                         if (e.key === 'ArrowDown') {
                             editingComponentDotCurrent.top = editingComponentDotCurrent.top - 1 < 0 ? 0 : editingComponentDotCurrent.top - 1;
+                            editingComponentDotCurrent.bottom = 798 - editingComponentDotCurrent.top - editingComponentDotCurrent.height;
                             setComponentTree({ ...componentTree });
                         }
                     }}
@@ -250,10 +246,12 @@ export default function() {
                     onKeyDown={e => {
                         if (e.key === 'ArrowUp') {
                             editingComponentDotCurrent.right = (editingComponentDotCurrent.right + 1 > (sizeData.width - editingComponentDotCurrent.width)) ? sizeData.width - editingComponentDotCurrent.width : editingComponentDotCurrent.right + 1;
+                            editingComponentDotCurrent.left = 1199 - editingComponentDotCurrent.right - editingComponentDotCurrent.width;
                             setComponentTree({ ...componentTree });
                         }
                         if (e.key === 'ArrowDown') {
                             editingComponentDotCurrent.right = editingComponentDotCurrent.right - 1 < 0 ? 0 : editingComponentDotCurrent.right - 1;
+                            editingComponentDotCurrent.left = 1199 - editingComponentDotCurrent.right - editingComponentDotCurrent.width;
                             setComponentTree({ ...componentTree });
                         }
                     }}
@@ -272,7 +270,7 @@ export default function() {
                             editingComponentDotCurrent.bottom = fixed(parseFloat(e.target.value), 2);
                             let noConflict = checkisConflict(editingComponent, componentTree);
                             if (noConflict && editingComponentDotCurrent.bottom >= 0 && editingComponentDotCurrent.bottom <= (798 - editingComponentDotCurrent.height)) {
-                                editingComponentDotCurrent.top = 798 - editingComponentDotCurrent.bottom - editingComponentDotCurrent.height;
+                                editingComponentDotCurrent.top = 798 - editingComponentDotCurrent.bottom - editingComponentDotCurrent.height; 
                                 setComponentTree({ ...componentTree });
                             } else {
                                 message.error('输入调整右侧距离碰撞到了其他的盒子或超出了边界，请调整');
@@ -286,10 +284,12 @@ export default function() {
                     onKeyDown={e => {
                         if (e.key === 'ArrowUp') {
                             editingComponentDotCurrent.bottom = (editingComponentDotCurrent.bottom + 1 > (sizeData.height - editingComponentDotCurrent.height)) ? sizeData.height - editingComponentDotCurrent.height : editingComponentDotCurrent.bottom + 1;
+                            editingComponentDotCurrent.top = 798 - editingComponentDotCurrent.bottom - editingComponentDotCurrent.height;
                             setComponentTree({ ...componentTree });
                         }
                         if (e.key === 'ArrowDown') {
                             editingComponentDotCurrent.bottom = editingComponentDotCurrent.bottom - 1 < 0 ? 0 : editingComponentDotCurrent.bottom - 1;
+                            editingComponentDotCurrent.top = 798 - editingComponentDotCurrent.bottom - editingComponentDotCurrent.height;
                             setComponentTree({ ...componentTree });
                         }
                     }}
@@ -298,6 +298,16 @@ export default function() {
                     editingComponentDotCurrent.verticalPositionBase = 'bottom';
                     setComponentTree({ ...componentTree });
                 }}>use bottom</Button>
+            </div>
+            {/* componentName的input */}
+            <div className={styles.inputRow}>
+                <Input disabled={disabled}
+                    value={editingComponentDotCurrent.componentName} onChange={e => {
+                        editingComponentDotCurrent.componentName = e.target.value;
+                        setComponentTree({ ...componentTree });
+                    }}
+                    
+                />
             </div>
             {/* className的input */}
             <div className={styles.inputRow}>
@@ -316,7 +326,7 @@ export default function() {
             </div>
             {/* delete的button */}
             <div className={styles.inputRow}>
-                <Button disabled={disabled} className={styles.buttonArea} onClick={handleDelete}>delete this component</Button>
+                <Button disabled={disabled} className={styles.buttonArea} onClick={handleDelete}>delete this component!</Button>
             </div>
         </div>);
 }

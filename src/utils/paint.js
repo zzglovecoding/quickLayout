@@ -86,6 +86,8 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
         item.current.top = resizeStyle.top;
         item.current.width = resizeStyle.width;
         item.current.height = resizeStyle.height;
+        item.current.right = 1199 - resizeStyle.left - item.current.width;
+        item.current.bottom = 798 - resizeStyle.top - item.current.height;
         let newNodeUUID = uuidGenerator();
         let children = [...item.children];
         children.forEach(item => {

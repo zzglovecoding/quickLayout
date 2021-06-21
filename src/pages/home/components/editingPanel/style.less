@@ -14,6 +14,9 @@
         position: relative;
         margin-top: 30px;
         text-align: center;
+        input {
+            border-radius: 10px;
+        }
         &::before {
             content:' ';
             display:block;
@@ -35,39 +38,40 @@
                 content:'height';
             }
         }
-        &:nth-child(4) {
-            &::before {
-                content:'copnt';
-            }
-        }
-        &:nth-child(5),&:nth-child(6),&:nth-child(7),&:nth-child(8) {
+        &:nth-child(4),&:nth-child(5),&:nth-child(6),&:nth-child(7) {
             position: relative;
             .rightButton {
                 width: 110px;
+                border-radius: 5px;
                 font-size: 12px;
                 color:@wordColor;
                 position:absolute;
                 right: 0;
             }
         }
-        &:nth-child(5) {
+        &:nth-child(4) {
             &::before {
                 content:'left';
             }
         }
-        &:nth-child(6) {
+        &:nth-child(5) {
             &::before {
                 content:'top';
             }
         }
-        &:nth-child(7) {
+        &:nth-child(6) {
             &::before {
                 content:'right';
             }
         }
-        &:nth-child(8) {
+        &:nth-child(7) {
             &::before {
                 content:'bottom';
+            }
+        }
+        &:nth-child(8) {
+            &::before {
+                content:'copnt';
             }
         }
         &:nth-child(9) {
@@ -84,6 +88,8 @@
                 width:100%;
                 letter-spacing:1px;
                 font-weight: 700;
+                background-color: rgba(255,0,0,.2);
+                border-radius: 10px;
             }
         }
     }
