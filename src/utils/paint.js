@@ -43,14 +43,18 @@ const handleDragEnd = e => {
 };
 
 export function generateElement(item, setEditingComponent, componentTree, setComponentTree) {
-    let left, top;
+    let left, top, right, bottom;
     if (item.current.parent === 1) {
         left = item.current.left + 'px';
         top = item.current.top + 'px';
+        right = item.current.right + 'px';
+        bottom = item.current.bottom + 'px';
     } else {
         let parent = getTargetBaseOnuuid(componentTree, item.current.parent).current;
         left = item.current.left - parent.left + 'px';
         top = item.current.top - parent.top + 'px';
+        right = item.current.right - parent.right + 'px';
+        bottom = item.current.bottom - parent.bottom + 'px';
     }
     let style = {
         position: 'absolute',
@@ -60,8 +64,22 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
         border: item.current.isEditingNow ? '2px dashed rgba(128,128,128,.5)' : '1px solid rgba(128,128,128,.3)',
         boxShadow: item.current.isEditingNow ? '2px 2px 4px rgb(136,136,136)' : '',
         left,
-        top
+        top,
+        right,
+        bottom
     };
+    if (item.current.horizonPositionBase === 'left') {
+        delete style.right;
+    } else {
+        delete style.left;
+    }
+
+    if (item.current.verticalPositionBase === 'top') {
+        delete style.bottom;
+    } else {
+        delete style.top;
+    }
+
     const handleResize = (resizeStyle) => {
         let componentTreeCopy = JSON.parse(JSON.stringify(componentTree));
         item.current.left = resizeStyle.left;

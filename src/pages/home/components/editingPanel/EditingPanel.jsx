@@ -163,7 +163,8 @@ export default function() {
                             let leftBefore = editingComponentDotCurrent.left;
                             editingComponentDotCurrent.left = fixed(parseFloat(e.target.value), 2);
                             let noConflict = checkisConflict(editingComponent, componentTree);
-                            if (noConflict && editingComponentDotCurrent.left >= 0) {
+                            if (noConflict && editingComponentDotCurrent.left >= 0 && editingComponentDotCurrent.left <= (1199 - editingComponentDotCurrent.width)) {
+                                editingComponentDotCurrent.right = 1199 - editingComponentDotCurrent.left - editingComponentDotCurrent.width;
                                 setComponentTree({ ...componentTree });
                             } else {
                                 message.error('输入调整左侧距离碰撞到了其他的盒子或超出了边界，请调整');
@@ -198,7 +199,8 @@ export default function() {
                             let topBefore = editingComponentDotCurrent.top;
                             editingComponentDotCurrent.top = fixed(parseFloat(e.target.value), 2);
                             let noConflict = checkisConflict(editingComponent, componentTree);
-                            if (noConflict && editingComponentDotCurrent.top >= 0) {
+                            if (noConflict && editingComponentDotCurrent.top >= 0 && editingComponentDotCurrent.top <= (798 - editingComponentDotCurrent.height)) {
+                                editingComponentDotCurrent.bottom = 798 - editingComponentDotCurrent.height - editingComponentDotCurrent.top;
                                 setComponentTree({ ...componentTree });
                             } else {
                                 message.error('输入调整上侧距离碰撞到了其他的盒子或超出了边界，请调整');
@@ -233,7 +235,8 @@ export default function() {
                             let rightBefore = editingComponentDotCurrent.right;
                             editingComponentDotCurrent.right = fixed(parseFloat(e.target.value), 2);
                             let noConflict = checkisConflict(editingComponent, componentTree);
-                            if (noConflict && editingComponentDotCurrent.right >= 0) {
+                            if (noConflict && editingComponentDotCurrent.right >= 0 && editingComponentDotCurrent.right <= (1199 - editingComponentDotCurrent.width)) {
+                                editingComponentDotCurrent.left = 1199 - editingComponentDotCurrent.right - editingComponentDotCurrent.width;
                                 setComponentTree({ ...componentTree });
                             } else {
                                 message.error('输入调整右侧距离碰撞到了其他的盒子或超出了边界，请调整');
@@ -244,16 +247,16 @@ export default function() {
                         }
                     }
                     }
-                    // onKeyDown={e => {
-                    //     if (e.key === 'ArrowUp') {
-                    //         editingComponentDotCurrent.top = (editingComponentDotCurrent.top + 1 > (sizeData.height - editingComponentDotCurrent.height)) ? sizeData.height - editingComponentDotCurrent.height : editingComponentDotCurrent.top + 1;
-                    //         setComponentTree({ ...componentTree });
-                    //     }
-                    //     if (e.key === 'ArrowDown') {
-                    //         editingComponentDotCurrent.top = editingComponentDotCurrent.top - 1 < 0 ? 0 : editingComponentDotCurrent.top - 1;
-                    //         setComponentTree({ ...componentTree });
-                    //     }
-                    // }}
+                    onKeyDown={e => {
+                        if (e.key === 'ArrowUp') {
+                            editingComponentDotCurrent.right = (editingComponentDotCurrent.right + 1 > (sizeData.width - editingComponentDotCurrent.width)) ? sizeData.width - editingComponentDotCurrent.width : editingComponentDotCurrent.right + 1;
+                            setComponentTree({ ...componentTree });
+                        }
+                        if (e.key === 'ArrowDown') {
+                            editingComponentDotCurrent.right = editingComponentDotCurrent.right - 1 < 0 ? 0 : editingComponentDotCurrent.right - 1;
+                            setComponentTree({ ...componentTree });
+                        }
+                    }}
                 />
                 <Button className={styles.rightButton} onClick={() => {
                     editingComponentDotCurrent.horizonPositionBase = 'right';
@@ -268,7 +271,8 @@ export default function() {
                             let bottomBefore = editingComponentDotCurrent.bottom;
                             editingComponentDotCurrent.bottom = fixed(parseFloat(e.target.value), 2);
                             let noConflict = checkisConflict(editingComponent, componentTree);
-                            if (noConflict && editingComponentDotCurrent.bottom >= 0) {
+                            if (noConflict && editingComponentDotCurrent.bottom >= 0 && editingComponentDotCurrent.bottom <= (798 - editingComponentDotCurrent.height)) {
+                                editingComponentDotCurrent.top = 798 - editingComponentDotCurrent.bottom - editingComponentDotCurrent.height;
                                 setComponentTree({ ...componentTree });
                             } else {
                                 message.error('输入调整右侧距离碰撞到了其他的盒子或超出了边界，请调整');
@@ -279,16 +283,16 @@ export default function() {
                         }
                     }
                     }
-                    // onKeyDown={e => {
-                    //     if (e.key === 'ArrowUp') {
-                    //         editingComponentDotCurrent.top = (editingComponentDotCurrent.top + 1 > (sizeData.height - editingComponentDotCurrent.height)) ? sizeData.height - editingComponentDotCurrent.height : editingComponentDotCurrent.top + 1;
-                    //         setComponentTree({ ...componentTree });
-                    //     }
-                    //     if (e.key === 'ArrowDown') {
-                    //         editingComponentDotCurrent.top = editingComponentDotCurrent.top - 1 < 0 ? 0 : editingComponentDotCurrent.top - 1;
-                    //         setComponentTree({ ...componentTree });
-                    //     }
-                    // }}
+                    onKeyDown={e => {
+                        if (e.key === 'ArrowUp') {
+                            editingComponentDotCurrent.bottom = (editingComponentDotCurrent.bottom + 1 > (sizeData.height - editingComponentDotCurrent.height)) ? sizeData.height - editingComponentDotCurrent.height : editingComponentDotCurrent.bottom + 1;
+                            setComponentTree({ ...componentTree });
+                        }
+                        if (e.key === 'ArrowDown') {
+                            editingComponentDotCurrent.bottom = editingComponentDotCurrent.bottom - 1 < 0 ? 0 : editingComponentDotCurrent.bottom - 1;
+                            setComponentTree({ ...componentTree });
+                        }
+                    }}
                 />
                 <Button className={styles.rightButton} onClick={() => {
                     editingComponentDotCurrent.verticalPositionBase = 'bottom';
