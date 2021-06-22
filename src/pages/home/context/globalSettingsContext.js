@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-09 20:18:01
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-20 01:10:35
+ * @LastEditTime: 2021-06-22 19:26:46
  */
 import React, { useState } from 'react';
 import { DISPLAY_LAYOUT_WIDTH, DISPLAY_LAYOUT_HEIGHT } from '@/constants/common.js';
@@ -57,7 +57,12 @@ function settingsHook() {
         setIsGroupModify(!isGroupModify);
         // 清除掉正在编辑的信息
         eraseEditingNowBaseonUUID(componentTree, '');
-        setEditingComponent({});
+        if (!isGroupModify) {
+            setEditingComponent({});
+        } else {
+            setComponentTree({ ...componentTree });
+        }
+        
     };
 
     return {

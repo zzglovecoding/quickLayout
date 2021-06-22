@@ -3,7 +3,7 @@
  * @Author: zzglovecoding
  * @Date: 2021-06-14 19:47:01
  * @LastEditors: zzglovecoding
- * @LastEditTime: 2021-06-19 23:50:39
+ * @LastEditTime: 2021-06-22 19:33:44
  */
 
 // 清除componentTree当中，除了当前uuid的所有的isEditingNow这个属性，是为了消除激活框的状态
@@ -315,24 +315,22 @@ export function getTheEditngNowCount(componentTree) {
 }
 
 export function makeArgsTheSame(componentTree, type) {
-    let unifyArg;
     let base;
+    let targetObjArr = [];
+    let valueArr = [];
     if (type === 'top' || type === 'bottom') {
-        base = 'horizonPositionBase';
-    } else {
         base = 'verticalPositionBase';
+    } else {
+        base = 'horizonPositionBase';
     }
 
     function Ite(node) {
-        if (node.current.isEditingNow === true && !unifyArg) {
-            unifyArg = node.current[type];
-            node.current[base] = type;
-            return;
-        }
         if (node.current.isEditingNow === true) {
+            targetObjArr.push(node.current);
             node.current[base] = type;
-            node.current[type] = unifyArg;
+            valueArr.push(node.current[type]);
         }
+
         if (node.children.length > 0) {
             node.children.forEach(item => {
                 Ite(item);
@@ -341,5 +339,9 @@ export function makeArgsTheSame(componentTree, type) {
     }
     componentTree.children.forEach(item => {
         Ite(item);
+    });
+    let mini = Math.min(...valueArr);
+    targetObjArr.forEach(item => {
+        item[type] = mini;
     });
 }
