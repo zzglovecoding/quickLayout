@@ -5,7 +5,7 @@
  * @LastEditors: zzglovecoding
  * @LastEditTime: 2021-06-21 22:10:36
  */
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Input, message } from 'antd';
 import { getTargetBaseOnuuid } from '@/utils/operateTree.js';
 import { fixed } from '@/utils/common.js';
@@ -63,9 +63,23 @@ export default function(editing, componentTree) {
 
     let args = [['1/4', 0.25], ['1/3', 0.33], ['1/2', 0.5], ['1/1', 1]];
     let positionArgs = [['1/8', 0.125], ['3/8', 0.375], ['5/8', 0.625], ['7/8', 0.875], ['1/4', 0.25], ['3/4', 0.75], ['1/2', 0.5], ['1/6', 0.16], ['1/3', 0.33], ['2/3', 0.66], ['5/6', 0.83]];
+    
+    const [wfractionInput, setwFractionInput] = useState('');
 
     const widthPopoverContent = (<div className="PopoverContent">
-        <Input placeholder="input the fraction"></Input>
+        <Input 
+            type="number" 
+            placeholder="input the fraction"
+            value={wfractionInput}
+            onChange={e => {
+                setwFractionInput(e.target.value);
+            }}
+            onPressEnter={() => {
+                if (!wfractionInput) {return;}
+                handleQuickSetArgs(wfractionInput, 'width');
+                setwFractionInput('');
+            }}
+        ></Input>
         {
             args.map(arr => {
                 return (
@@ -75,8 +89,22 @@ export default function(editing, componentTree) {
         }
     </div>);
 
+    const [hfractionInput, sethFractionInput] = useState('');
+
     const heightPopoverContent = (<div className="PopoverContent">
-        <Input placeholder="input the fraction"></Input>
+        <Input 
+            type="number" 
+            placeholder="input the fraction"
+            value={hfractionInput}
+            onChange={e => {
+                sethFractionInput(e.target.value);
+            }}
+            onPressEnter={() => {
+                if (!hfractionInput) {return;}
+                handleQuickSetArgs(hfractionInput, 'height');
+                sethFractionInput('');
+            }}
+        ></Input>
         {
             args.map(arr => {
                 return (
