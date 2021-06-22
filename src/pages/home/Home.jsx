@@ -140,6 +140,9 @@ export default function Home() {
                                 <div className={styles.ratio} style={{ color: hRatio > 1 ? 'red' : hRatio === 1 ? '' : 'green' }}><span title="红色（绿色）代表真实页面中会被拉伸（压缩）">{hRatio}</span></div>
                             </div>
                             <div className={styles.toolItem}>
+                                <Switch checked={globalSetting.isGroupModify} onChange={() => globalSetting.handleGroupModify(editing)}/>
+                            </div>
+                            <div className={styles.toolItem}>
                                 <Button className={styles.sendButton} onClick={handleSend}>generate!</Button>
                             </div>
                         </div>

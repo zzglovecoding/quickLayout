@@ -1,4 +1,5 @@
-# quickLayout
-Select some components to quickly generate page layout
+# 快速布局
+通过拖动产生一个快速的布局
 
-Use this tool to quickly drag and generate a JSX template. According to the size and layout determined by drag and drop, less or CSS is generated, and then a JSX is generated, which can be introduced according to the selected components
+通过拖动，产生一个jsx文件和一个与之匹配的less文件，通过绝对定位的方式产生less的信息。如果不是特别大量的盒子布局，绝对定位在性能方面几乎不会有什么感觉上的区别，所以保证了易用性。
+

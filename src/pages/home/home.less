@@ -40,7 +40,7 @@
         .toolItem {
             float:left;
         }
-        .toolItem:nth-child(1),.toolItem:nth-child(2),.toolItem:nth-child(3),.toolItem:nth-child(4) {
+        .toolItem:nth-child(1),.toolItem:nth-child(2),.toolItem:nth-child(3),.toolItem:nth-child(4),.toolItem:nth-child(5) {
             width:100px;
             height: 30px;
             margin-left: 15px;
@@ -111,6 +111,11 @@
                 &::after {
                     content: 'hght-ratio';
                 }
+            }
+        }
+        .toolItem:nth-child(5) {
+            &::after{
+                content: 'group modify';
             }
         }
         .toolItem:nth-last-child(1) {

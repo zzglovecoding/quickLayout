@@ -7,6 +7,7 @@
  */
 import React, { useState } from 'react';
 import { DISPLAY_LAYOUT_WIDTH, DISPLAY_LAYOUT_HEIGHT } from '@/constants/common.js';
+import { eraseEditingNowBaseonUUID } from '@/utils/operateTree.js';
 
 const globalSettingsContext = React.createContext({
     settings: {}
@@ -17,6 +18,7 @@ function settingsHook() {
     const [realCanvasHeight, setRealCanvasHeight] = useState(798);
     const [isShowGrid, setIsShowGrid] = useState(true);
     const [hasNetWork, setHasNetWork] = useState(false);
+    const [isGroupModify, setIsGroupModify] = useState(false);
     const [componentTree, setComponentTree] = useState({ 
         current: {
             componentName: 'body',
@@ -48,7 +50,19 @@ function settingsHook() {
         setRealCanvasHeight(value);
     };
 
+    const handleGroupModify = (editing) => {
+        const {
+            setEditingComponent
+        } = editing;
+        setIsGroupModify(!isGroupModify);
+        // 清除掉正在编辑的信息
+        eraseEditingNowBaseonUUID(componentTree, '');
+        setEditingComponent({});
+    };
+
     return {
+        isGroupModify,
+        handleGroupModify,
         realCanvasWidth,
         handleRealCanvasWidthInput,
         realCanvasHeight,

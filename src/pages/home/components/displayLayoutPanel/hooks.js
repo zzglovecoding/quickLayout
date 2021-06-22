@@ -46,9 +46,11 @@ export default function(_, settings, editing ) {
         // 深拷贝一个组件树的对象，因为马上要删除避免碰撞，所以保留一个用于后面setState回退
         let componentCopy = JSON.parse(JSON.stringify(componentTree));
         // 先删除的原因，是碰撞检测就不会碰到原先的，后面如果检测失败，会用componentCopy回退所以不用担心
-        let uuid = e.dataTransfer.getData('uuid');
-        deleteANodeOnTree(componentTree, uuid);
-        setComponentTree({ ...componentTree });
+        if (!e.ctrlKey) {
+            let uuid = e.dataTransfer.getData('uuid');
+            deleteANodeOnTree(componentTree, uuid);
+            setComponentTree({ ...componentTree });
+        }
         // 第一次和第二次拖动，只有位置数据是需要分别讨论的
         let left;
         let top;
