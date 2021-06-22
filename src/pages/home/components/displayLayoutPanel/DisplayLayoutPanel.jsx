@@ -25,6 +25,8 @@ export default function() {
     };
 
     const {
+        isGroupModify,
+        handleGroupModify,
         isShowGrid,
         componentTree,
         setComponentTree
@@ -64,7 +66,7 @@ export default function() {
         }
         {
             componentTree.children.map(item => {
-                return generateElement(item, setEditingComponent, componentTree, setComponentTree);
+                return generateElement(item, setEditingComponent, componentTree, setComponentTree, isGroupModify);
             })
         }
         {

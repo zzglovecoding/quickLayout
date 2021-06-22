@@ -295,3 +295,51 @@ export function classNamePossessed(cName, componentTree) {
     Ite(componentTree);
     return noPossessed;
 }
+
+export function getTheEditngNowCount(componentTree) {
+    let count = 0;
+    function Ite(node) {
+        if (node.current.isEditingNow === true) {
+            count++;
+        }
+        if (node.children.length > 0) {
+            node.children.forEach(item => {
+                Ite(item);
+            });
+        }
+    }
+    componentTree.children.forEach(item => {
+        Ite(item);
+    });
+    return count;
+}
+
+export function makeArgsTheSame(componentTree, type) {
+    let unifyArg;
+    let base;
+    if (type === 'top' || type === 'bottom') {
+        base = 'horizonPositionBase';
+    } else {
+        base = 'verticalPositionBase';
+    }
+
+    function Ite(node) {
+        if (node.current.isEditingNow === true && !unifyArg) {
+            unifyArg = node.current[type];
+            node.current[base] = type;
+            return;
+        }
+        if (node.current.isEditingNow === true) {
+            node.current[base] = type;
+            node.current[type] = unifyArg;
+        }
+        if (node.children.length > 0) {
+            node.children.forEach(item => {
+                Ite(item);
+            });
+        }
+    }
+    componentTree.children.forEach(item => {
+        Ite(item);
+    });
+}

@@ -42,7 +42,66 @@ const handleDragEnd = e => {
     e.dataTransfer.clearData();
 };
 
-export function generateElement(item, setEditingComponent, componentTree, setComponentTree) {
+export function generateElement(item, setEditingComponent, componentTree, setComponentTree, isGroupModify) {
+    if (isGroupModify) {
+        let left, top, right, bottom;
+        if (item.current.parent === 1) {
+            left = item.current.left + 'px';
+            top = item.current.top + 'px';
+            right = item.current.right + 'px';
+            bottom = item.current.bottom + 'px';
+        } else {
+            let parent = getTargetBaseOnuuid(componentTree, item.current.parent).current;
+            left = item.current.left - parent.left + 'px';
+            top = item.current.top - parent.top + 'px';
+            right = item.current.right - parent.right + 'px';
+            bottom = item.current.bottom - parent.bottom + 'px';
+        }
+        let style = {
+            position: 'absolute',
+            width: item.current.width + 'px',
+            height: item.current.height + 'px',
+            cursor: 'pointer',
+            border: item.current.isEditingNow ? '2px dashed rgba(128,128,128,.5)' : '1px solid rgba(128,128,128,.3)',
+            boxShadow: item.current.isEditingNow ? '2px 2px 4px rgb(136,136,136)' : '',
+            left,
+            top,
+            right,
+            bottom
+        };
+        if (item.current.horizonPositionBase === 'left') {
+            delete style.right;
+        } else {
+            delete style.left;
+        }
+
+        if (item.current.verticalPositionBase === 'top') {
+            delete style.bottom;
+        } else {
+            delete style.top;
+        }
+
+        let component = (<div
+            onClick = {() => {
+                item.current.isEditingNow = !item.current.isEditingNow;
+                setComponentTree({ ...componentTree });
+                setEditingComponent(item);
+            }}
+            style={style}
+            key={Math.random()}
+        >
+            {
+                item.children?.map(child => {
+                    return generateElement(child, setEditingComponent, componentTree, setComponentTree, isGroupModify);
+                })
+            }
+            {
+                <span style={{ fontWeight: '700', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', color: 'rgba(0, 106, 180, 0.8)' }}>{item.current.componentName}</span>
+            }
+        </div>);
+
+        return component;
+    } 
     let left, top, right, bottom;
     if (item.current.parent === 1) {
         left = item.current.left + 'px';
@@ -145,7 +204,7 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
     >
         {
             item.children?.map(child => {
-                return generateElement(child, setEditingComponent, componentTree, setComponentTree);
+                return generateElement(child, setEditingComponent, componentTree, setComponentTree, isGroupModify);
             })
         }
         {
@@ -157,4 +216,5 @@ export function generateElement(item, setEditingComponent, componentTree, setCom
     </div>);
 
     return component;
+    
 }

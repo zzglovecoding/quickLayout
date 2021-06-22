@@ -7,11 +7,12 @@
  */
 import styles from './home.less';
 import React from 'react';
-import { Input, Switch, Button, Modal, message } from 'antd';
+import { Input, Switch, Button, Modal, message, Popover } from 'antd';
 import { pageSizeContext, pageHook } from './context/pageSizeContext.js';
 import { globalSettingsContext, settingsHook } from './context/globalSettingsContext.js';
 import { editingComponentContext, editingComponentHooks } from './context/editingComponentContext.js';
 import { fixed } from '@/utils/common.js';
+import { getTheEditngNowCount, makeArgsTheSame } from '@/utils/operateTree.js';
 import { generateJSX } from '@/utils/generate/generateJSX/generateJSXFile.js';
 import { generateLess } from '@/utils/generate/generateLess/generateLessFile.js';
 
@@ -32,7 +33,8 @@ export default function Home() {
         handleRealCanvasHeightInput,
         realCanvasWidth,
         realCanvasHeight,
-        componentTree
+        componentTree,
+        setComponentTree
     } = globalSetting;
 
     const handleSend = () => {
@@ -99,6 +101,26 @@ export default function Home() {
     let wRatio = fixed((globalSetting.realCanvasWidth / 1199), 6);
     let hRatio = fixed((globalSetting.realCanvasHeight / 798), 6);
 
+    const handleAdjust = (type) => {
+        let arg = type.split(' ')[1];
+        makeArgsTheSame(componentTree, arg);
+        setComponentTree({ ...componentTree });
+    };
+
+    let editingNowCount = getTheEditngNowCount(componentTree);
+
+    let alignArgs = ['same left', 'same right', 'same top', 'same bottom'];
+
+    const quickAlignPopover = <div className="PopoverContent">
+        {
+            alignArgs.map(item => {
+                return (
+                    <Button className="PopoverContentItem" onClick={() => handleAdjust(item)} key={item}>{item}</Button>
+                );
+            })
+        }
+    </div>;
+
     return (
         <div className={styles.home}>
             <pageSizeContext.Provider value={sizeData}>
@@ -141,6 +163,11 @@ export default function Home() {
                             </div>
                             <div className={styles.toolItem}>
                                 <Switch checked={globalSetting.isGroupModify} onChange={() => globalSetting.handleGroupModify(editing)}/>
+                            </div>
+                            <div className={styles.toolItem}>
+                                <Popover content={quickAlignPopover} trigger={editingNowCount >= 2 ? 'hover' : 'contextMenu'}>
+                                    <Button className={styles.toolBoxButton} disabled={editingNowCount < 2}>quick align</Button>
+                                </Popover>
                             </div>
                             <div className={styles.toolItem}>
                                 <Button className={styles.sendButton} onClick={handleSend}>generate!</Button>
