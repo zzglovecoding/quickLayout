@@ -12,7 +12,6 @@ import { globalSettingsContext } from '../../context/globalSettingsContext.js';
 import { pageSizeContext } from '../../context/pageSizeContext.js';
 import { checkisConflict, deleteANodeOnTree, classNamePossessed } from '@/utils/operateTree.js';
 import { isEmpty, fixed } from '@/utils/common.js';
-import { intAndDecimal } from '@/utils/regex.js';
 import hooks from './hooks.js';
 import styles from './style.less';
 
@@ -53,7 +52,8 @@ export default function() {
         leftPopoverContent,
         rightPopoverContent,
         topPopoverContent,
-        bottomPopoverContent
+        bottomPopoverContent,
+        handleFloatClick
     } = hooks(editing, componentTree);
 
     // 正编辑的东西如果改变，就需要重新挂上监听，不然editingComponent是没有的
@@ -229,6 +229,22 @@ export default function() {
                 >
                     <Button disabled={(disabled || editingComponentDotCurrent.verticalPositionBase === 'top')} className={styles.adjustButton}>adjust</Button>
                 </Popover>
+            </div>
+            <div className={styles.inputRow}>
+                <Input  disabled={disabled}
+                />
+                <Button disabled={disabled} className={styles.rightButton} onClick={() => {
+                    handleFloatClick('left');
+                }}>left float</Button>
+                <Button disabled={disabled} className={styles.rightButton} onClick={() => {
+                    handleFloatClick('right');
+                }}>right float</Button>
+                <Button disabled={disabled} className={styles.rightButton} onClick={() => {
+                    handleFloatClick('top');
+                }}>top float</Button>
+                <Button disabled={disabled} className={styles.rightButton} onClick={() => {
+                    handleFloatClick('bottom');
+                }}>bottom float</Button>
             </div>
             {/* componentName的input */}
             <div className={styles.inputRow}>

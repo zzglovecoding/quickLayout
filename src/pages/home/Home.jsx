@@ -109,7 +109,7 @@ export default function Home() {
 
     let editingNowCount = getTheEditngNowCount(componentTree);
 
-    let alignArgs = ['same left', 'same right', 'same top', 'same bottom'];
+    let alignArgs = ['same left', 'same right', 'same top', 'same bottom', 'same height', 'same width'];
 
     const quickAlignPopover = <div className="PopoverContent">
         {

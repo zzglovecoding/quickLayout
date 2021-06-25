@@ -320,14 +320,16 @@ export function makeArgsTheSame(componentTree, type) {
     let valueArr = [];
     if (type === 'top' || type === 'bottom') {
         base = 'verticalPositionBase';
-    } else {
+    } else if (type === 'left' || type === 'right') {
         base = 'horizonPositionBase';
     }
 
     function Ite(node) {
         if (node.current.isEditingNow === true) {
             targetObjArr.push(node.current);
-            node.current[base] = type;
+            if (base) {
+                node.current[base] = type;
+            }
             valueArr.push(node.current[type]);
         }
 

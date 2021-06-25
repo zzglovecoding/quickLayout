@@ -1,5 +1,5 @@
 /*
- * @Description: 
+ * @Description: 正在编辑的hooks
  * @Author: zzglovecoding
  * @Date: 2021-06-21 19:45:28
  * @LastEditors: zzglovecoding
@@ -158,12 +158,17 @@ export default function(editing, componentTree) {
         }
     </div>);
 
+    const handleFloatClick = (floatType) => {
+
+    };
+
     return {
         widthPopoverContent,
         heightPopoverContent,
         leftPopoverContent,
         rightPopoverContent,
         topPopoverContent,
-        bottomPopoverContent
+        bottomPopoverContent,
+        handleFloatClick
     };
 }
